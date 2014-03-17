@@ -7,9 +7,9 @@ import java.net.URLConnection;
  * Created by alexhill on 3/17/14.
  */
 public class Response {
-    private String request;
+    private Request request;
 
-    public Response(String request) {
+    public Response(Request request) {
         this.request = request;
     }
 
@@ -42,6 +42,6 @@ public class Response {
     }
 
     private String getFilename() {
-        return this.request.split(" ")[1];
+        return this.request.path;
     }
 }

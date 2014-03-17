@@ -6,9 +6,6 @@ import java.net.*;
 
 public class Server {
     private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
 
     public Server() throws IOException{
         serverSocket = new ServerSocket(5000);
@@ -26,12 +23,13 @@ public class Server {
 
     public void run() throws IOException {
         while(true) {
-            clientSocket = serverSocket.accept();
+            Socket clientSocket = serverSocket.accept();
             OutputStream clientOutputStream = clientSocket.getOutputStream();
-            out = new PrintWriter(clientOutputStream, true);
+            PrintWriter out = new PrintWriter(clientOutputStream, true);
             InputStream clientInputStream = clientSocket.getInputStream();
-            in = new BufferedReader(new InputStreamReader(clientInputStream));
-            Response response = new Response(in.readLine());
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientInputStream));
+            Request request = new Request(in.readLine());
+            Response response = new Response(request);
             out.println(response.returnFullResponse());
             clientSocket.close();
         }

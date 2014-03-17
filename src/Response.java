@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -14,8 +15,15 @@ public class Response {
     }
 
     public String returnFullResponse() throws IOException {
-        String fileContents = getFileContents();
-        return "HTTP/1.0 200 OK\n\n" + fileContents + "\r\n";
+        try {
+            String fileContents = getFileContents();
+            if(fileContents != null) {
+                return "HTTP/1.0 200 OK\n\n" + fileContents + "\r\n";
+            }
+        } catch(FileNotFoundException ex) {
+            System.err.println(ex);
+        }
+        return "HTTP/1.0 404 Not Found";
     }
 
     public String getFileContents() throws IOException {

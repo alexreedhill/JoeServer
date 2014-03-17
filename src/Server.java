@@ -32,8 +32,7 @@ public class Server {
             InputStream clientInputStream = clientSocket.getInputStream();
             in = new BufferedReader(new InputStreamReader(clientInputStream));
             Response response = new Response(in.readLine());
-            out.println("HTTP/1.0 200 OK\r\n");
-            out.println("Foo");
+            out.println(response.returnFullResponse());
             clientSocket.close();
         }
 

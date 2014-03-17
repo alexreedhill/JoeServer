@@ -1,3 +1,4 @@
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -26,7 +27,8 @@ public class Response {
 
     private InputStream setupUrlInputStream() throws IOException {
         String filename = getFilename();
-        URL url = new URL("file:public" + filename);
+        String absolutePath = System.getProperty("user.dir").replace("/src", "");
+        URL url = new URL("file:" + absolutePath + "/public" + filename);
         URLConnection urlConnection = url.openConnection();
         return urlConnection.getInputStream();
     }

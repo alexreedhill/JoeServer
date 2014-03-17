@@ -13,6 +13,12 @@ public class Response {
         this.request = request;
     }
 
+    public String returnFullResponse() throws IOException {
+        String fileContents = getFileContents();
+        String fullResponse = "HTTP/1.0 200 OK\n\n" + fileContents + "\r\n";
+        return fullResponse;
+    }
+
     public String getFileContents() throws IOException {
         InputStream input = setupUrlInputStream();
         return buildFileContentsString(input);

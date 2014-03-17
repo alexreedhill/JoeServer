@@ -14,21 +14,28 @@ public class Response {
     }
 
     public String getFileContents() throws IOException {
+        InputStream input = setupUrlInputStream();
+        return buildFileContentsString(input);
+    }
+
+    private InputStream setupUrlInputStream() throws IOException {
         String filename = getFilename();
         URL url = new URL("file:public" + filename);
         URLConnection urlConnection = url.openConnection();
-        InputStream input = urlConnection.getInputStream();
+        return urlConnection.getInputStream();
+    }
+
+    private String buildFileContentsString(InputStream input) throws IOException {
         StringBuilder fileContents = new StringBuilder();
         int data = input.read();
         while(data != -1){
-            System.out.print((char) data);
             fileContents.append((char) data);
             data = input.read();
         }
         return fileContents.toString();
     }
 
-    public String getFilename() {
+    private String getFilename() {
         return this.request.split(" ")[1];
     }
 }

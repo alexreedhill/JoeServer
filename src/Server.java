@@ -10,7 +10,7 @@ public class Server {
     private PrintWriter out;
     private BufferedReader in;
 
-    public Server() throws IOException {
+    public Server() throws IOException{
         serverSocket = new ServerSocket(5000);
     }
 
@@ -25,20 +25,17 @@ public class Server {
     }
 
     public void run() throws IOException {
-        clientSocket = serverSocket.accept();
-        OutputStream clientOutputStream = clientSocket.getOutputStream();
-        out = new PrintWriter(clientOutputStream, true);
-        InputStream clientInputStream = clientSocket.getInputStream();
-        in = new BufferedReader(new InputStreamReader(clientInputStream));
-        out.println("HTTP/1.0 200 OK\r\n");
-        stop();
-    }
+        while(true) {
+            clientSocket = serverSocket.accept();
+            OutputStream clientOutputStream = clientSocket.getOutputStream();
+            out = new PrintWriter(clientOutputStream, true);
+            InputStream clientInputStream = clientSocket.getInputStream();
+            in = new BufferedReader(new InputStreamReader(clientInputStream));
+            Response response = new Response(in.readLine());
+            out.println("HTTP/1.0 200 OK\r\n");
+            out.println("Foo");
+            clientSocket.close();
+        }
 
-    public void stop() throws IOException {
-        out.close();
-        in.close();
-        clientSocket.close();
-        serverSocket.close();
     }
-
 }

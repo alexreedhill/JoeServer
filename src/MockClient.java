@@ -14,7 +14,7 @@ public class MockClient {
     public static void main(String[] args) {
         try {
             MockClient client = new MockClient();
-            client.sendRequest("GET", "/");
+            client.sendRequest(args[0], args[1]);
         } catch(IOException ex) {
             System.err.println(ex);
             System.exit(1);

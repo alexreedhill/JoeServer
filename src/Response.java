@@ -1,4 +1,3 @@
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -16,8 +15,7 @@ public class Response {
 
     public String returnFullResponse() throws IOException {
         String fileContents = getFileContents();
-        String fullResponse = "HTTP/1.0 200 OK\n\n" + fileContents + "\r\n";
-        return fullResponse;
+        return "HTTP/1.0 200 OK\n\n" + fileContents + "\r\n";
     }
 
     public String getFileContents() throws IOException {

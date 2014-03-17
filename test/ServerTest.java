@@ -19,4 +19,6 @@ public class ServerTest {
       String statusCode = client.requestResponseStatusCode("GET", "/");
       assertEquals(statusCode, "200");
     }
+
+    @Test
 }

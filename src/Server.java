@@ -30,7 +30,7 @@ public class Server {
         out = new PrintWriter(clientOutputStream, true);
         InputStream clientInputStream = clientSocket.getInputStream();
         in = new BufferedReader(new InputStreamReader(clientInputStream));
-        out.println("HTTP/1.0 200 OK");
+        out.println("HTTP/1.0 200 OK\r\n");
         stop();
     }
 

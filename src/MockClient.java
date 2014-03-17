@@ -6,8 +6,6 @@ import java.net.*;
  */
 public class MockClient {
     private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
 
     public MockClient() throws IOException {
         socket = new Socket("localhost", 5000);
@@ -30,15 +28,14 @@ public class MockClient {
 
     private String sendRequest(String method, String path) throws IOException {
         InputStreamReader networkStreamReader = new InputStreamReader(socket.getInputStream());
-        in = new BufferedReader(networkStreamReader);
-        out = new PrintWriter(socket.getOutputStream());
+        BufferedReader in = new BufferedReader(networkStreamReader);
+        PrintWriter out = new PrintWriter(socket.getOutputStream());
         out.print(method + " " + path + " " + "HTTP/1.0\r\n");
         String line;
         StringBuffer response = new StringBuffer();
         while((line = in.readLine()) != null) {
             response.append(line);
             response.append("\r\n");
-            System.out.println(line);
         }
         return response.toString();
     }

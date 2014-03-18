@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class Response {
     private Request request;
     private FileReader fileReader;
-    public String statusCode;
+    private String statusCode;
     private byte[] fullResponse;
     private byte[] body;
 

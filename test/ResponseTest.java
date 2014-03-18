@@ -23,10 +23,11 @@ public class ResponseTest {
     }
 
     @Test
-    public void returns404WhenNoFileLocated() throws Exception {
+    public void returns404ResponseWhenNoFileLocated() throws Exception {
         request = new Request("GET /foobar HTTP/1.0");
         response = new Response(request);
-        String statusCode = response.statusCode;
-        assertEquals("404", statusCode);
+        byte[] responseBytes = response.respond();
+        String fullResponse = new String(responseBytes, "UTF-8");
+        assertEquals("HTTP/1.0 404 Not Found\r\n", fullResponse);
     }
 }

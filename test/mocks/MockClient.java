@@ -22,6 +22,10 @@ public class MockClient {
         }
     }
 
+    public OutputStream getOutputStream() throws IOException {
+        return socket.getOutputStream();
+    }
+
     private String sendRequest(String method, String path) throws IOException {
         InputStreamReader networkStreamReader = new InputStreamReader(socket.getInputStream());
         BufferedReader in = new BufferedReader(networkStreamReader);

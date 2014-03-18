@@ -1,9 +1,9 @@
 import mocks.MockClient;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PipedOutputStream;
 
 import static junit.framework.Assert.*;
 
@@ -13,7 +13,20 @@ import static junit.framework.Assert.*;
 public class ResponseTest {
     private Request request;
     private Response response;
-    private PipedOutputStream out = new PipedOutputStream();
+    private OutputStream out;
+
+
+    @Before
+    public void setupMockClient() throws IOException {
+        MockClient client = new MockClient();
+        out = client.getOutputStream();
+    }
+
+    @After
+    public void closeOutputStream() throws IOException {
+        out.close();
+    }
+
 
     @Test
     public void returnsResponseWithFileContentsAndStatusCode() throws Exception {
@@ -30,13 +43,5 @@ public class ResponseTest {
         response.respond(out);
         String statusCode = response.getStatusCode();
         assertEquals("404", statusCode);
-    }
-
-    @Test public void returns200StatusCodeForImage() throws Exception {
-        request = new Request("GET /image.jpeg HTTP/1.0");
-        response = new Response(request);
-        response.respond(out);
-        String statusCode = response.getStatusCode();
-        assertEquals("200", statusCode);
     }
 }

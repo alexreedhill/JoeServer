@@ -15,43 +15,49 @@ public class Response {
     }
 
     public String respond(OutputStream output) throws IOException {
-        String fileExtension = getFileExtension();
-        try {
-            byte[] bytes = getFileByteArray();
-            if (fileExtension.equals("jpeg")) {
-                respondWithImage(bytes, output);
-            } else {
-                respondWithFile(bytes, output);
+        if(request.path.equals("/")) {
+            fullResponse = "HTTP/1.0 200 OK";
+        } else {
+            String fileExtension = getFileExtension();
+            System.out.println("File extension: " + fileExtension);
+            try {
+                byte[] bytes = getFileByteArray();
+                if (fileExtension.equals("jpeg")) {
+                    respondWithImage(bytes, output);
+                } else {
+                    respondWithFile(bytes);
+                }
+            } catch(FileNotFoundException ex) {
+                fullResponse = "HTTP/1.0 404 Not Found";
             }
-        } catch(FileNotFoundException ex) {
-            fullResponse = "HTTP/1.0 404 Not Found";
-            PrintWriter out = new PrintWriter(output, true);
-            out.println(fullResponse);
         }
+        PrintWriter out = new PrintWriter(output, true);
+        out.println(fullResponse);
         return fullResponse;
     }
 
     public String getFileExtension() throws IOException {
         try {
-            return request.path.split(".")[-1];
+            return request.path.split("\\.")[1];
         } catch(ArrayIndexOutOfBoundsException ex) {
             return "";
         }
 
     }
 
-    public void respondWithFile(byte[] bytes, OutputStream output) throws IOException {
+    public void respondWithFile(byte[] bytes) throws IOException {
         String fileContents = buildFileContentsString(bytes);
         if(fileContents != null) {
             fullResponse = "HTTP/1.0 200 OK\n\n" + fileContents + "\r\n";
         } else {
             fullResponse = "HTTP/1.0 200 OK\r\n";
         }
-        PrintWriter out = new PrintWriter(output, true);
-        out.println(fullResponse);
     }
 
     public void respondWithImage(byte[] bytes, OutputStream output) throws IOException {
+        fullResponse = "HTTP/1.0 200 OK\r\n";
+        PrintWriter out = new PrintWriter(output, true);
+        out.println(fullResponse);
         BufferedImage image = buildBufferedImage(bytes);
         ImageIO.write(image, "jpeg", output);
     }

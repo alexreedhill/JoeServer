@@ -30,7 +30,7 @@ public class Server {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientInputStream));
             Request request = new Request(in.readLine());
             Response response = new Response(request);
-            out.println(response.returnFullResponse());
+            out.println(response.getFullResponse());
             clientSocket.close();
         }
 

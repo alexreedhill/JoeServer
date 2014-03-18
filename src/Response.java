@@ -14,7 +14,7 @@ public class Response {
         this.request = request;
     }
 
-    public String returnFullResponse() throws IOException {
+    public String getFullResponse() throws Exception {
         try {
             String fileContents = getFileContents();
             if(fileContents != null) {
@@ -52,4 +52,12 @@ public class Response {
     private String getFilename() {
         return this.request.path;
     }
+
+    public String getStatusCode() throws Exception {
+        String fullResponse = getFullResponse();
+        return fullResponse.split(" ")[1];
+    }
 }
+
+// BufferedImage
+// Image.IO.write(image, "png", outputStream);

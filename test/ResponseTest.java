@@ -22,7 +22,7 @@ public class ResponseTest {
     public void returnsResponseWithFileContentsAndStatusCode() throws IOException {
         request = new Request("GET /file1 HTTP/1.0");
         response = new Response(request);
-        String fullResponse = response.returnFullResponse();
+        String fullResponse = response.getFullResponse();
         assertEquals("HTTP/1.0 200 OK\n\nfile1 contents\r\n", fullResponse);
     }
 
@@ -30,8 +30,14 @@ public class ResponseTest {
     public void returns404WhenNoFileLocated() throws Exception {
         request = new Request("GET /foobar HTTP/1.0");
         response = new Response(request);
-        String fullResponse = response.returnFullResponse();
-        String statusCode = fullResponse.split(" ")[1];
+        String statusCode = response.getStatusCode();
         assertEquals("404", statusCode);
+    }
+
+    @Test public void returns200StatusCodeForImage() throws IOException {
+        request = new Request("GET /image.jpeg HTTP/1.0");
+        response = new Response(request);
+        String statusCode = response.getStatusCode();
+        assertEquals("200", statusCode);
     }
 }

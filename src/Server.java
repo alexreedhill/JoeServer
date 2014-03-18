@@ -18,7 +18,9 @@ public class Server {
         } catch(IOException ex) {
             System.err.println(ex);
             System.exit(1);
-        } catch(ArrayIndexOutOfBoundsException ex) {}
+        } catch(ArrayIndexOutOfBoundsException ex) {
+            System.err.println(ex);
+        }
     }
 
     public void run() throws Exception {
@@ -31,7 +33,12 @@ public class Server {
             if((input = in.readLine()) != "Host: localhost:5000" && input != null) {
                 Request request = new Request(input);
                 Response response = new Response(request);
-                response.respond(clientOutputStream);
+                DataOutputStream writer = new DataOutputStream(clientOutputStream);
+                byte[] fullResponse = response.respond();
+                writer.write(fullResponse, 0, fullResponse.length);
+                System.out.println("Response: " + new String(fullResponse, "UTF-8"));
+                writer.flush();
+                writer.close();
             }
             clientSocket.close();
         }

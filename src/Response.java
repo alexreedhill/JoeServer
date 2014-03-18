@@ -8,76 +8,48 @@ import javax.imageio.ImageIO;
  */
 public class Response {
     private Request request;
-    private String fullResponse;
+    private FileReader fileReader;
+    public String statusCode;
+    private byte[] fullResponse;
+    private byte[] body;
 
-    public Response(Request request) {
+    public Response(Request request) throws IOException {
         this.request = request;
+        fileReader = new FileReader();
+        try {
+            this.body = fileReader.read(request.path);
+            this.statusCode = "200";
+        } catch(IOException ex) {
+            this.statusCode = "404";
+        }
     }
 
-    public String respond(OutputStream output) throws IOException {
+    public byte[] respond() throws IOException {
         if(request.path.equals("/")) {
-            fullResponse = "HTTP/1.0 200 OK";
+            return (request.httpVersion + " 200 OK\r\n").getBytes();
+        } else if(this.statusCode.equals("404")) {
+            return (request.httpVersion + " 404 Not Found\r\n").getBytes();
         } else {
-            String fileExtension = getFileExtension();
-            System.out.println("File extension: " + fileExtension);
-            try {
-                byte[] bytes = getFileByteArray();
-                if (fileExtension.equals("jpeg")) {
-                    respondWithImage(bytes, output);
-                } else {
-                    respondWithFile(bytes);
-                }
-            } catch(FileNotFoundException ex) {
-                fullResponse = "HTTP/1.0 404 Not Found";
-            }
+            return buildFullResponse();
         }
-        PrintWriter out = new PrintWriter(output, true);
-        out.println(fullResponse);
+    }
+
+    public byte[] buildFullResponse() throws IOException {
+        byte[] metadata = (buildStatusLine() + buildContentTypeHeader()).getBytes();
+        fullResponse = new byte[metadata.length + body.length];
+        System.arraycopy(metadata, 0, fullResponse, 0, metadata.length);
+        System.arraycopy(body, 0, fullResponse, metadata.length, body.length);
+        System.out.println(new String(fullResponse));
+
         return fullResponse;
     }
 
-    public String getFileExtension() throws IOException {
-        try {
-            return request.path.split("\\.")[1];
-        } catch(ArrayIndexOutOfBoundsException ex) {
-            return "";
-        }
-
+    public String buildStatusLine() {
+        return request.httpVersion + " " + "200 " + "OK\r\n";
     }
 
-    public void respondWithFile(byte[] bytes) throws IOException {
-        String fileContents = buildFileContentsString(bytes);
-        if(fileContents != null) {
-            fullResponse = "HTTP/1.0 200 OK\n\n" + fileContents + "\r\n";
-        } else {
-            fullResponse = "HTTP/1.0 200 OK\r\n";
-        }
-    }
-
-    public void respondWithImage(byte[] bytes, OutputStream output) throws IOException {
-        fullResponse = "HTTP/1.0 200 OK\r\n";
-        PrintWriter out = new PrintWriter(output, true);
-        out.println(fullResponse);
-        BufferedImage image = buildBufferedImage(bytes);
-        ImageIO.write(image, "jpeg", output);
-    }
-
-    public String getStatusCode() throws Exception {
-        return fullResponse.split(" ")[1];
-    }
-
-    private byte[] getFileByteArray() throws IOException {
-        File file = new File("./public/" + request.path);
-        return FileUtils.readFileToByteArray(file);
-    }
-
-    private BufferedImage buildBufferedImage(byte[] bytes) throws IOException {
-        ByteArrayInputStream input = new ByteArrayInputStream(bytes);
-        return ImageIO.read(input);
-    }
-
-    private String buildFileContentsString(byte[] bytes) throws IOException {
-        return new String(bytes, "UTF-8");
+    public String buildContentTypeHeader() throws IOException {
+        return "Content-Type: " + fileReader.getMimeType(request.path) + "\r\n\n";
     }
 
 }

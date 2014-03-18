@@ -1,7 +1,4 @@
-import java.awt.image.BufferedImage;
-import java.io.*;
-import org.apache.commons.io.FileUtils;
-import javax.imageio.ImageIO;
+import java.io.IOException;
 
 /**
  * Created by alexhill on 3/17/14.
@@ -10,17 +7,16 @@ public class Response {
     private Request request;
     private FileReader fileReader;
     private String statusCode;
-    private byte[] fullResponse;
     private byte[] body;
 
     public Response(Request request) throws IOException {
         this.request = request;
         fileReader = new FileReader();
         try {
-            this.body = fileReader.read(request.path);
-            this.statusCode = "200";
+            body = fileReader.read(request.path);
+            statusCode = "200";
         } catch(IOException ex) {
-            this.statusCode = "404";
+            statusCode = "404";
         }
     }
 
@@ -36,16 +32,14 @@ public class Response {
 
     public byte[] buildFullResponse() throws IOException {
         byte[] metadata = (buildStatusLine() + buildContentTypeHeader()).getBytes();
-        fullResponse = new byte[metadata.length + body.length];
+        byte[] fullResponse = new byte[metadata.length + body.length];
         System.arraycopy(metadata, 0, fullResponse, 0, metadata.length);
         System.arraycopy(body, 0, fullResponse, metadata.length, body.length);
-        System.out.println(new String(fullResponse));
-
         return fullResponse;
     }
 
     public String buildStatusLine() {
-        return request.httpVersion + " " + "200 " + "OK\r\n";
+        return request.httpVersion + " " + statusCode + " " + "OK\r\n";
     }
 
     public String buildContentTypeHeader() throws IOException {
@@ -53,6 +47,3 @@ public class Response {
     }
 
 }
-
-// BufferedImage
-// Image.IO.write(image, "png", outputStream);

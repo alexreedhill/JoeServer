@@ -36,7 +36,6 @@ public class Server {
                 DataOutputStream writer = new DataOutputStream(clientOutputStream);
                 byte[] fullResponse = response.respond();
                 writer.write(fullResponse, 0, fullResponse.length);
-                System.out.println("Response: " + new String(fullResponse, "UTF-8"));
                 writer.flush();
                 writer.close();
             }

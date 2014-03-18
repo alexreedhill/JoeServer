@@ -1,5 +1,4 @@
 import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -16,12 +15,16 @@ public class FileReader {
     public String getMimeType(String path) throws IOException {
         try {
             String extension = path.split("\\.")[1];
-            if (extension.equals("jpeg")) {
-                return "image/jpeg";
-            } else {
-                return "text/plain";
-            }
+            return getMimeTypeFromFileExtension(extension);
         } catch (ArrayIndexOutOfBoundsException ex) {
+            return "text/plain";
+        }
+    }
+
+    private String getMimeTypeFromFileExtension(String extension) {
+        if (extension.equals("jpeg")) {
+            return "image/jpeg";
+        } else {
             return "text/plain";
         }
     }

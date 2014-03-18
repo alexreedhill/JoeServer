@@ -6,8 +6,13 @@ import static junit.framework.Assert.*;
 /**
  * Created by alexhill on 3/17/14.
  */
-public class RequestTest {
-    private Request request = new Request("GET /path/to/file.html HTTP/1.0");
+public class RequestTest{
+    private Request request;
+
+    @Before
+    public void initializeRequest() throws Exception {
+        request = new Request("GET /path/to/file.html HTTP/1.0");
+    }
 
     @Test
     public void getMethod() {

@@ -22,33 +22,17 @@ public class MockClient {
         }
     }
 
-    public String requestResponseStatusCode(String method, String path) throws IOException {
-        String response = sendRequest(method, path);
-        return getResponseStatusCode(response);
-    }
-
     private String sendRequest(String method, String path) throws IOException {
         InputStreamReader networkStreamReader = new InputStreamReader(socket.getInputStream());
         BufferedReader in = new BufferedReader(networkStreamReader);
         PrintWriter out = new PrintWriter(socket.getOutputStream());
         out.print(method + " " + path + " " + "HTTP/1.0\r\n");
         String line;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
         while((line = in.readLine()) != null) {
             response.append(line);
             response.append("\r\n");
         }
         return response.toString();
-    }
-
-    private String getResponseStatusCode(String response) throws IOException {
-        String firstResponseLine = getFirstResponseLine(response);
-        String statusCode = firstResponseLine.split(" ")[1];
-        return statusCode;
-    }
-
-    private String getFirstResponseLine(String response) {
-        String firstResponseLine = response.split("\n")[0];
-        return firstResponseLine;
     }
 }

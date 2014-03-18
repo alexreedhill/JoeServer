@@ -11,26 +11,28 @@ public class Server {
         serverSocket = new ServerSocket(5000);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try  {
             Server server = new Server();
             server.run();
         } catch(IOException ex) {
             System.err.println(ex);
             System.exit(1);
-        }
+        } catch(ArrayIndexOutOfBoundsException ex) {}
     }
 
-    public void run() throws IOException {
+    public void run() throws Exception {
         while(true) {
             Socket clientSocket = serverSocket.accept();
             OutputStream clientOutputStream = clientSocket.getOutputStream();
-            PrintWriter out = new PrintWriter(clientOutputStream, true);
             InputStream clientInputStream = clientSocket.getInputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(clientInputStream));
-            Request request = new Request(in.readLine());
-            Response response = new Response(request);
-            out.println(response.getFullResponse());
+            String input;
+            if((input = in.readLine()) != "Host: localhost:5000" && input != null) {
+                Request request = new Request(input);
+                Response response = new Response(request);
+                response.respond(clientOutputStream);
+            }
             clientSocket.close();
         }
 

@@ -1,6 +1,10 @@
+import mocks.MockClient;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PipedOutputStream;
+
 import static junit.framework.Assert.*;
 
 /**
@@ -9,20 +13,13 @@ import static junit.framework.Assert.*;
 public class ResponseTest {
     private Request request;
     private Response response;
+    private PipedOutputStream out = new PipedOutputStream();
 
     @Test
-    public void returnsContentsOfFile() throws IOException {
+    public void returnsResponseWithFileContentsAndStatusCode() throws Exception {
         request = new Request("GET /file1 HTTP/1.0");
         response = new Response(request);
-        String fileContents = response.getFileContents();
-        assertEquals("file1 contents", fileContents);
-    }
-
-    @Test
-    public void returnsResponseWithFileContentsAndStatusCode() throws IOException {
-        request = new Request("GET /file1 HTTP/1.0");
-        response = new Response(request);
-        String fullResponse = response.getFullResponse();
+        String fullResponse = response.respond(out);
         assertEquals("HTTP/1.0 200 OK\n\nfile1 contents\r\n", fullResponse);
     }
 
@@ -30,6 +27,7 @@ public class ResponseTest {
     public void returns404WhenNoFileLocated() throws Exception {
         request = new Request("GET /foobar HTTP/1.0");
         response = new Response(request);
+        response.respond(out);
         String statusCode = response.getStatusCode();
         assertEquals("404", statusCode);
     }
@@ -37,6 +35,7 @@ public class ResponseTest {
     @Test public void returns200StatusCodeForImage() throws Exception {
         request = new Request("GET /image.jpeg HTTP/1.0");
         response = new Response(request);
+        response.respond(out);
         String statusCode = response.getStatusCode();
         assertEquals("200", statusCode);
     }

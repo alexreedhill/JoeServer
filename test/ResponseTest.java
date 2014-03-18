@@ -34,7 +34,7 @@ public class ResponseTest {
         assertEquals("404", statusCode);
     }
 
-    @Test public void returns200StatusCodeForImage() throws IOException {
+    @Test public void returns200StatusCodeForImage() throws Exception {
         request = new Request("GET /image.jpeg HTTP/1.0");
         response = new Response(request);
         String statusCode = response.getStatusCode();

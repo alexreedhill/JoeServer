@@ -14,7 +14,7 @@ public class Response {
         this.request = request;
     }
 
-    public String getFullResponse() throws Exception {
+    public String getFullResponse() throws IOException {
         try {
             String fileContents = getFileContents();
             if(fileContents != null) {

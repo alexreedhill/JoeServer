@@ -22,4 +22,5 @@ public class ResponseTest {
         String fullResponse = new String(responseBytes, "UTF-8");
         assertEquals("HTTP/1.0 404 Not Found\r\n", fullResponse);
     }
+
 }

@@ -13,7 +13,7 @@ public class Server {
     private Socket clientSocket;
     private OutputStream clientOutputStream;
     private BufferedReader in;
-    String input;
+    String rawRequest;
 
     public Server() throws IOException{
         serverSocket = new ServerSocket(5000);
@@ -49,7 +49,7 @@ public class Server {
     }
 
     private byte[] createResponse() throws Exception {
-        Request request = new Request(input);
+        Request request = new Request(rawRequest);
         Response response = new Response(request);
         return response.respond();
     }
@@ -62,6 +62,6 @@ public class Server {
     }
 
     private boolean validRequest() throws IOException {
-        return (input = in.readLine()) != "Host: localhost:5000" && input != null;
+        return (rawRequest = in.readLine()) != "Host: localhost:5000" && rawRequest != null;
     }
 }

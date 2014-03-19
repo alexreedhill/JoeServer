@@ -6,14 +6,27 @@ public class FileReaderTest {
     private FileReader fileReader = new FileReader();
 
     @Test
-    public void itReadsPlainTextFileIntoByteArray() throws IOException {
+    public void readsPlainTextFileIntoByteArray() throws IOException {
         byte[] bytes = fileReader.read("/file1");
         String contents = new String(bytes, "UTF-8");
         assertEquals("file1 contents", contents);
     }
 
-    @Test public void itGetsMimeTypeForJpegImage() throws IOException {
-        String MIMEtype = fileReader.getMimeType("/image.jpeg");
-        assertEquals("image/jpeg", MIMEtype);
+    @Test
+    public void getsMimeTypeForJpegImage() throws IOException {
+        String mimeType = fileReader.getMimeType("/image.jpeg");
+        assertEquals("image/jpeg", mimeType);
+    }
+
+    @Test
+    public void getsPlainTextMimeTypeForFileWithNoExtension() throws IOException {
+        String mimeType = fileReader.getMimeType("file1");
+        assertEquals("text/plain", mimeType);
+    }
+
+    @Test
+    public void getsCorrectMimeTypeForGif() throws IOException {
+        String mimeType = fileReader.getMimeType("image.png");
+        assertEquals("image/png", mimeType);
     }
 }

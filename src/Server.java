@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 
 
 public class Server {
@@ -14,9 +15,12 @@ public class Server {
     private OutputStream clientOutputStream;
     private BufferedReader in;
     String rawRequest;
+    private ArrayList invalidRequests;
+
 
     public Server() throws IOException{
         serverSocket = new ServerSocket(5000);
+        invalidRequests = createInvalidRequestsList();
     }
 
     public static void main(String[] args) throws Exception {
@@ -62,6 +66,14 @@ public class Server {
     }
 
     private boolean validRequest() throws IOException {
-        return (rawRequest = in.readLine()) != "Host: localhost:5000" && rawRequest != null;
+        return !invalidRequests.contains(rawRequest = in.readLine());
+    }
+
+    private ArrayList createInvalidRequestsList() {
+        return new ArrayList<String>() {{
+            add("Host: localhost:5000");
+            add("");
+            add(null);
+        }};
     }
 }

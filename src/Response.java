@@ -5,11 +5,9 @@ import java.util.Map;
 
 public class Response {
     public Request request;
-    private FileReader fileReader = new FileReader();
+    private FileReader fileReader;
     private String statusCode;
     private byte[] body = new byte[0];
-    private String contentTypeHeader;
-    private RequestHandler handler;
     private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
 
     private static Map<String, String> createStatusMessages() {
@@ -21,21 +19,12 @@ public class Response {
 
     public Response(Request request) throws IOException {
         this.request = request;
-        if(request.method.equals("POST")) {
-            handler = new PostHandler();
-        } else if(request.method.equals("GET")) {
-            handler = new GetHandler();
-        }
-        try {
-            handler.handle(this);
-        } catch(NullPointerException ex) {
-            System.out.println("No handler yet for this type of request: " + request.method);
-        }
+        fileReader = new FileReader();
     }
 
     public void openResource() throws IOException {
-        body = fileReader.read(request.path);
         set200Response();
+        body = fileReader.read(request.path);
     }
 
     public void set200Response() throws IOException {

@@ -3,12 +3,13 @@ import static junit.framework.Assert.assertEquals;
 
 public class ResponseTest {
     private Request request;
+    private Dispatcher dispatcher = new Dispatcher();
     private Response response;
 
     @Test
     public void returnsResponseWithFileContentsAndStatusCode() throws Exception {
         request = new Request("GET /file1 HTTP/1.0");
-        response = new Response(request);
+        response = dispatcher.dispatch(request);
         byte[] responseBytes = response.respond();
         String fullResponse = new String(responseBytes, "UTF-8");
         assertEquals("HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\nfile1 contents", fullResponse);
@@ -17,7 +18,7 @@ public class ResponseTest {
     @Test
     public void returns404ResponseWhenNoFileLocated() throws Exception {
         request = new Request("GET /foobar HTTP/1.0");
-        response = new Response(request);
+        response = dispatcher.dispatch(request);
         byte[] responseBytes = response.respond();
         String fullResponse = new String(responseBytes, "UTF-8");
         assertEquals("HTTP/1.0 404 Not Found\r\n", fullResponse);
@@ -26,15 +27,15 @@ public class ResponseTest {
     @Test
     public void returnsCorrectStatusMessageFor200StatusCode() throws Exception {
         request = new Request("GET /file1 HTTP/1.0");
-        response = new Response(request);
+        response = dispatcher.dispatch(request);
         String statusMessage = response.getStatusMessage();
-        assertEquals(statusMessage, "OK");
+        assertEquals("OK", statusMessage);
     }
 
     @Test
     public void returns200OnPostRequest() throws Exception {
         request = new Request("POST /form HTTP/1.1");
-        response = new Response(request);
+        response = dispatcher.dispatch(request);
         byte[] responseBytes = response.respond();
         String fullResponse = new String(responseBytes, "UTF-8");
         assertEquals("HTTP/1.1 200 OK\r\n", fullResponse);

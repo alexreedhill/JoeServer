@@ -4,8 +4,10 @@ import java.io.IOException;
  * Created by alexhill on 3/19/14.
  */
 public class GetHandler implements RequestHandler {
+    private Response response;
 
-    public void handle(Response response) throws IOException {
+    public Response handle(Request request) throws IOException {
+        response = new Response(request);
         if(response.request.path.equals("/")) {
             response.set200Response();
         } else {
@@ -15,5 +17,6 @@ public class GetHandler implements RequestHandler {
                 response.set404Response();
             }
         }
+        return response;
     }
 }

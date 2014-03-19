@@ -14,9 +14,9 @@ public class Server {
     private Socket clientSocket;
     private OutputStream clientOutputStream;
     private BufferedReader in;
-    String rawRequest;
+    private String rawRequest;
     private ArrayList invalidRequests;
-
+    private Dispatcher dispatcher = new Dispatcher();
 
     public Server() throws IOException{
         serverSocket = new ServerSocket(5000);
@@ -54,7 +54,7 @@ public class Server {
 
     private byte[] createResponse() throws Exception {
         Request request = new Request(rawRequest);
-        Response response = new Response(request);
+        Response response = dispatcher.dispatch(request);
         return response.respond();
     }
 

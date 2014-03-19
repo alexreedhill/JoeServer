@@ -31,4 +31,13 @@ public class ResponseTest {
         assertEquals(statusMessage, "OK");
     }
 
+    @Test
+    public void returns200OnPostRequest() throws Exception {
+        request = new Request("POST /form HTTP/1.1");
+        response = new Response(request);
+        byte[] responseBytes = response.respond();
+        String fullResponse = new String(responseBytes, "UTF-8");
+        assertEquals("HTTP/1.1 200 OK\r\n", fullResponse);
+    }
+
 }

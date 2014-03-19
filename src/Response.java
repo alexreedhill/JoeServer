@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Response {
-    private Request request;
+    public Request request;
     private FileReader fileReader;
     private String statusCode;
-    private byte[] body;
+    private byte[] body = new byte[0];
+    private String contentTypeHeader;
+    private RequestHandler handler;
     private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
 
     private static Map<String, String> createStatusMessages() {
@@ -19,26 +21,29 @@ public class Response {
 
     public Response(Request request) throws IOException {
         this.request = request;
-        fileReader = new FileReader();
-        try {
-            body = fileReader.read(request.path);
-            statusCode = "200";
-        } catch(IOException ex) {
-            statusCode = "404";
+        if(request.method.equals("POST")) {
+            handler = new PostHandler();
+        } else if(request.method.equals("GET")) {
+            handler = new GetHandler();
         }
+        handler.handle(this);
+    }
+
+    public void openResource() throws IOException {
+        fileReader = new FileReader();
+        body = fileReader.read(request.path);
+        set200Response();
+    }
+
+    public void set200Response() throws IOException {
+        statusCode = "200";
+    }
+
+    public void set404Response() throws IOException {
+        statusCode = "404";
     }
 
     public byte[] respond() throws IOException {
-        if(request.path.equals("/")) {
-            return (request.httpVersion + " 200 OK\r\n").getBytes();
-        } else if(statusCode.equals("404")) {
-            return (request.httpVersion + " 404 Not Found\r\n").getBytes();
-        } else {
-            return buildFullResponse();
-        }
-    }
-
-    private byte[] buildFullResponse() throws IOException {
         byte[] metadata = (buildStatusLine() + buildContentTypeHeader()).getBytes();
         byte[] fullResponse = new byte[metadata.length + body.length];
         System.arraycopy(metadata, 0, fullResponse, 0, metadata.length);
@@ -55,7 +60,12 @@ public class Response {
     }
 
     private String buildContentTypeHeader() throws IOException {
-        return "Content-Type: " + fileReader.getMimeType(request.path) + "\r\n\n";
+        if(request.method.equals("POST") || statusCode.equals("404")) {
+            return "";
+        } else {
+            String mimeType = fileReader.getMimeType(request.path);
+            return "Content-Type: " + mimeType + "\r\n\n";
+        }
     }
 
 }

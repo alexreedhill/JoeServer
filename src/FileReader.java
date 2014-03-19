@@ -7,9 +7,9 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
 public class FileReader {
-    private static final Map<String, String> MIME_TYPES = createMap();
+    private static final Map<String, String> MIME_TYPES = createMimeTypes();
 
-    private static Map<String, String> createMap() {
+    private static Map<String, String> createMimeTypes() {
         Map<String, String> result = new HashMap<String, String>();
         result.put("jpeg", "image/jpeg");
         result.put("jpg", "image/jpg");

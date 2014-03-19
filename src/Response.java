@@ -1,10 +1,21 @@
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Response {
     private Request request;
     private FileReader fileReader;
     private String statusCode;
     private byte[] body;
+    private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
+
+    private static Map<String, String> createStatusMessages() {
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("200", "OK");
+        result.put("404", "Not Found");
+        return Collections.unmodifiableMap(result);
+    }
 
     public Response(Request request) throws IOException {
         this.request = request;
@@ -27,7 +38,7 @@ public class Response {
         }
     }
 
-    public byte[] buildFullResponse() throws IOException {
+    private byte[] buildFullResponse() throws IOException {
         byte[] metadata = (buildStatusLine() + buildContentTypeHeader()).getBytes();
         byte[] fullResponse = new byte[metadata.length + body.length];
         System.arraycopy(metadata, 0, fullResponse, 0, metadata.length);
@@ -35,11 +46,15 @@ public class Response {
         return fullResponse;
     }
 
-    public String buildStatusLine() {
-        return request.httpVersion + " " + statusCode + " " + "OK\r\n";
+    private String buildStatusLine() {
+        return request.httpVersion + " " + statusCode + " " + getStatusMessage() + "\r\n";
     }
 
-    public String buildContentTypeHeader() throws IOException {
+    public String getStatusMessage() {
+        return STATUS_MESSAGES.get(statusCode);
+    }
+
+    private String buildContentTypeHeader() throws IOException {
         return "Content-Type: " + fileReader.getMimeType(request.path) + "\r\n\n";
     }
 

@@ -9,7 +9,7 @@ public class ResponseTest {
     public void returnsResponseWithFileContentsAndStatusCode() throws Exception {
         request = new Request("GET /file1 HTTP/1.0");
         response = new Response(request);
-        byte[] responseBytes = response.buildFullResponse();
+        byte[] responseBytes = response.respond();
         String fullResponse = new String(responseBytes, "UTF-8");
         assertEquals("HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\nfile1 contents", fullResponse);
     }
@@ -21,6 +21,14 @@ public class ResponseTest {
         byte[] responseBytes = response.respond();
         String fullResponse = new String(responseBytes, "UTF-8");
         assertEquals("HTTP/1.0 404 Not Found\r\n", fullResponse);
+    }
+
+    @Test
+    public void returnsCorrectStatusMessageFor200StatusCode() throws Exception {
+        request = new Request("GET /file1 HTTP/1.0");
+        response = new Response(request);
+        String statusMessage = response.getStatusMessage();
+        assertEquals(statusMessage, "OK");
     }
 
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Response {
     public Request request;
-    private FileReader fileReader;
+    private FileReader fileReader = new FileReader();
     private String statusCode;
     private byte[] body = new byte[0];
     private String contentTypeHeader;
@@ -26,11 +26,14 @@ public class Response {
         } else if(request.method.equals("GET")) {
             handler = new GetHandler();
         }
-        handler.handle(this);
+        try {
+            handler.handle(this);
+        } catch(NullPointerException ex) {
+            System.out.println("No handler yet for this type of request: " + request.method);
+        }
     }
 
     public void openResource() throws IOException {
-        fileReader = new FileReader();
         body = fileReader.read(request.path);
         set200Response();
     }
@@ -60,12 +63,11 @@ public class Response {
     }
 
     private String buildContentTypeHeader() throws IOException {
-        if(request.method.equals("POST") || statusCode.equals("404")) {
-            return "";
-        } else {
+        if(request.method.equals("GET") && statusCode.equals("200")) {
             String mimeType = fileReader.getMimeType(request.path);
             return "Content-Type: " + mimeType + "\r\n\n";
+        } else {
+            return "";
         }
     }
-
 }

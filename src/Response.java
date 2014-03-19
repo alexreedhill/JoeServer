@@ -1,7 +1,3 @@
-/**
- * Created by alexhill on 3/17/14.
- */
-
 import java.io.IOException;
 
 public class Response {
@@ -24,7 +20,7 @@ public class Response {
     public byte[] respond() throws IOException {
         if(request.path.equals("/")) {
             return (request.httpVersion + " 200 OK\r\n").getBytes();
-        } else if(this.statusCode.equals("404")) {
+        } else if(statusCode.equals("404")) {
             return (request.httpVersion + " 404 Not Found\r\n").getBytes();
         } else {
             return buildFullResponse();

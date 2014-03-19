@@ -1,10 +1,6 @@
 import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
 
-import static junit.framework.Assert.*;
-
-/**
-* Created by alexhill on 3/17/14.
-*/
 public class ResponseTest {
     private Request request;
     private Response response;

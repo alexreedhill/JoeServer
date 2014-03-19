@@ -1,6 +1,3 @@
-/**
- * Created by alexhill on 3/17/14.
- */
 public class Request {
     public String method;
     public String path;
@@ -13,8 +10,8 @@ public class Request {
 
     private void processRawRequest(String rawRequest) throws Exception {
         String[] splitRawRequest = rawRequest.split(" ");
-        this.method = splitRawRequest[0];
-        this.path = splitRawRequest[1];
-        this.httpVersion = splitRawRequest[2];
+        method = splitRawRequest[0];
+        path = splitRawRequest[1];
+        httpVersion = splitRawRequest[2];
     }
 }

@@ -1,10 +1,6 @@
-/**
- * Created by alexhill on 3/18/14.
- */
-
 import org.junit.Test;
 import java.io.IOException;
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertEquals;
 
 public class FileReaderTest {
     private FileReader fileReader = new FileReader();

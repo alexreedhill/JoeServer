@@ -1,10 +1,7 @@
-import org.apache.commons.io.FileUtils;
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
+import org.apache.commons.io.FileUtils;
 
-/**
- * Created by alexhill on 3/18/14.
- */
 public class FileReader {
 
     public byte[] read(String path) throws IOException {

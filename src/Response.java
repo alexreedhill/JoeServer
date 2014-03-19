@@ -1,8 +1,9 @@
-import java.io.IOException;
-
 /**
  * Created by alexhill on 3/17/14.
  */
+
+import java.io.IOException;
+
 public class Response {
     private Request request;
     private FileReader fileReader;

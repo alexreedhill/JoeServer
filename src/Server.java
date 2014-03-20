@@ -27,11 +27,9 @@ public class Server {
         try  {
             Server server = new Server();
             server.run();
-        } catch(IOException ex) {
+        } catch(Exception ex) {
             System.err.println(ex);
             System.exit(1);
-        } catch(ArrayIndexOutOfBoundsException ex) {
-            System.err.println(ex);
         }
     }
 

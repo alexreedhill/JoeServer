@@ -1,5 +1,4 @@
 public class OptionsHandler implements RequestHandler {
-    private Request request;
     private Response response;
 
     public Response handle(Request request) throws Exception {

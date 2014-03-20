@@ -10,6 +10,7 @@ public class Response {
     private byte[] body = new byte[0];
     private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
     private Map<String, String> HEADERS = new HashMap<String, String>();
+    private String headers = "";
 
     private static Map<String, String> createStatusMessages() {
         Map<String, String> messages = new HashMap<String, String>();
@@ -67,17 +68,11 @@ public class Response {
     }
 
     private String buildHeaders() throws Exception {
-        String headers = "";
         buildContentTypeHeader();
-        int i = 0;
+        int i = 1;
         for(Map.Entry entry : HEADERS.entrySet()) {
-            headers += entry.getKey() + ": " + entry.getValue();
+            buildHeader(entry, i);
             i++;
-            if(i < HEADERS.size()) {
-                headers += "\n";
-            } else {
-                headers += "\r\n\n";
-            }
         }
         return headers;
     }
@@ -88,6 +83,15 @@ public class Response {
             HEADERS.put("Content-Type", mimeType);
         } else {
             HEADERS.put("Content-Type", "text/plain");
+        }
+    }
+
+    private void buildHeader(Map.Entry entry, int i) {
+        headers += entry.getKey() + ": " + entry.getValue();
+        if(i < HEADERS.size()) {
+            headers += "\n";
+        } else {
+            headers += "\r\n\n";
         }
     }
 

@@ -12,25 +12,33 @@ public class ParameterDecoder {
         for (int i = 0; i < string.length(); i++){
             char c = string.charAt(i);
             if(c == '%') {
-                StringBuilder decodedString = new StringBuilder(string);
-                String encodedSubString = string.substring(i, i + 3);
-                String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
-                decodedString.replace(i, i + 3, decodedSubString);
-                string = decodedString.toString();
+                string = decodeSubString(string, i);
             }
         }
         return string;
+    }
+
+    private String decodeSubString(String string, int i) {
+        StringBuilder decodedString = new StringBuilder(string);
+        String encodedSubString = string.substring(i, i + 3);
+        String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
+        decodedString.replace(i, i + 3, decodedSubString);
+        return decodedString.toString();
     }
 
     private HashMap<String, String> splitParams(String stringParams) {
         HashMap<String, String> params = new HashMap<String, String>();
         String[] splitParams =  stringParams.split("&");
         for(int i = 0; i < splitParams.length; i++) {
-            String param = splitParams[i];
-            String[] splitParam = param.split("=");
-            params.put(splitParam[0], splitParam[1]);
+            splitParam(params, splitParams, i);
         }
         return params;
+    }
+
+    private void splitParam(HashMap<String, String> params, String[] splitParams, int i) {
+        String param = splitParams[i];
+        String[] splitParam = param.split("=");
+        params.put(splitParam[0], splitParam[1]);
     }
 
     private static HashMap<String, Character> createConversions() {

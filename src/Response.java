@@ -12,11 +12,11 @@ public class Response {
     private Map<String, String> HEADERS = new HashMap<String, String>();
 
     private static Map<String, String> createStatusMessages() {
-        Map<String, String> result = new HashMap<String, String>();
-        result.put("200", "OK");
-        result.put("404", "Not Found");
-        result.put("301", "Moved Permanently");
-        return Collections.unmodifiableMap(result);
+        Map<String, String> messages = new HashMap<String, String>();
+        messages.put("200", "OK");
+        messages.put("404", "Not Found");
+        messages.put("301", "Moved Permanently");
+        return Collections.unmodifiableMap(messages);
     }
 
     public Response(Request request) throws IOException {

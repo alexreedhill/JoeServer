@@ -8,8 +8,7 @@ public class RedirectHandler {
     private Request redirect;
 
     public Response handle(Request request) throws Exception {
-        redirect = new Request("GET / " + request.httpVersion);
-        response = new Response(redirect);
+        response = new Response(request);
         response.set301Response();
         return response;
     }

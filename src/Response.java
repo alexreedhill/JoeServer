@@ -39,7 +39,7 @@ public class Response {
 
     public void set301Response() throws IOException {
         statusCode = "301";
-        setHeader("Location", "/");
+        setHeader("Location", "http://localhost:5000/");
     }
 
     public void setHeader(String header, String value) {

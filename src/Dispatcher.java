@@ -11,8 +11,6 @@ public class Dispatcher {
             Class handlerClass = Class.forName(classNamePrefix + "Handler");
             Method handleMethod = handlerClass.getMethod("handle", Request.class);
             response = (Response)handleMethod.invoke(handlerClass.newInstance(), request);
-        } catch(NullPointerException ex) {
-            System.out.println("No handler yet for this type of request: " + request.method);
         } catch(Exception ex) {
             System.out.println(ex);
         }

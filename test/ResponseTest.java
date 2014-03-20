@@ -10,8 +10,7 @@ public class ResponseTest {
     public void returnsResponseWithFileContentsAndStatusCode() throws Exception {
         request = new Request("GET /file1 HTTP/1.0");
         response = dispatcher.dispatch(request);
-        byte[] responseBytes = response.respond();
-        String fullResponse = new String(responseBytes, "UTF-8");
+        String fullResponse = response.convertToString();
         assertEquals("HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\nfile1 contents", fullResponse);
     }
 
@@ -19,9 +18,8 @@ public class ResponseTest {
     public void returns404ResponseWhenNoFileLocated() throws Exception {
         request = new Request("GET /foobar HTTP/1.0");
         response = dispatcher.dispatch(request);
-        byte[] responseBytes = response.respond();
-        String fullResponse = new String(responseBytes, "UTF-8");
-        assertEquals("HTTP/1.0 404 Not Found\r\n", fullResponse);
+        String fullResponse = response.convertToString();
+        assertEquals("HTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\n\n", fullResponse);
     }
 
     @Test
@@ -36,9 +34,15 @@ public class ResponseTest {
     public void returns200OnPostRequest() throws Exception {
         request = new Request("POST /form HTTP/1.1");
         response = dispatcher.dispatch(request);
-        byte[] responseBytes = response.respond();
-        String fullResponse = new String(responseBytes, "UTF-8");
-        assertEquals("HTTP/1.1 200 OK\r\n", fullResponse);
+        String fullResponse = response.convertToString();
+        assertEquals("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\n", fullResponse);
+    }
+
+    @Test public void setsLocationHeader() throws Exception {
+        request = new Request("GET /redirect HTTP/1.1");
+        response = dispatcher.dispatch(request);
+        String fullResponse = response.convertToString();
+        assertEquals("HTTP/1.1 301 Moved Permanently\r\nLocation: /\nContent-Type: text/plain\r\n\n", fullResponse);
     }
 
 }

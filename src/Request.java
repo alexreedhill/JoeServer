@@ -10,8 +10,13 @@ public class Request {
 
     private void processRawRequest(String rawRequest) throws Exception {
         String[] splitRawRequest = rawRequest.split(" ");
-        method = splitRawRequest[0];
         path = splitRawRequest[1];
         httpVersion = splitRawRequest[2];
+        System.out.println("Path: " + path);
+        if(path.equals("/redirect")) {
+            method = "REDIRECT";
+        } else {
+            method = splitRawRequest[0];
+        }
     }
 }

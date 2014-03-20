@@ -46,6 +46,10 @@ public class Response {
         HEADERS.put(header, value);
     }
 
+    public String getHeaderValue(String header) {
+        return HEADERS.get(header);
+    }
+
     public byte[] respond() throws Exception {
         byte[] metadata = (buildStatusLine() + buildHeaders()).getBytes();
         byte[] fullResponse = new byte[metadata.length + body.length];

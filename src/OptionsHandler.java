@@ -1,6 +1,3 @@
-/**
- * Created by alexhill on 3/20/14.
- */
 public class OptionsHandler implements RequestHandler {
     private Request request;
     private Response response;

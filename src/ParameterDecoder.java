@@ -1,12 +1,14 @@
 import java.util.HashMap;
 
-/**
- * Created by alexhill on 3/20/14.
- */
 public class ParameterDecoder {
     private static final HashMap<String, Character> CONVERSIONS = createConversions();
 
-    public String decode(String string) {
+    public HashMap<String, String> decode(String params) {
+        String decodedParams = decodeString(params);
+        return splitParams(decodedParams);
+    }
+
+    public String decodeString(String string) {
         for (int i = 0; i < string.length(); i++){
             char c = string.charAt(i);
             if(c == '%') {
@@ -18,6 +20,17 @@ public class ParameterDecoder {
             }
         }
         return string;
+    }
+
+    private HashMap<String, String> splitParams(String stringParams) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        String[] splitParams =  stringParams.split("&");
+        for(int i = 0; i < splitParams.length; i++) {
+            String param = splitParams[i];
+            String[] splitParam = param.split("=");
+            params.put(splitParam[0], splitParam[1]);
+        }
+        return params;
     }
 
     private static HashMap<String, Character> createConversions() {

@@ -1,8 +1,3 @@
-import java.io.IOException;
-
-/**
- * Created by alexhill on 3/19/14.
- */
 public class RedirectHandler {
     private Response response;
     private Request redirect;

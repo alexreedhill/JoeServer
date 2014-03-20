@@ -1,8 +1,5 @@
 import java.io.IOException;
 
-/**
- * Created by alexhill on 3/19/14.
- */
 public class PostHandler implements RequestHandler {
     private Response response;
 

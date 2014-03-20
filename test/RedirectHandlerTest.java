@@ -12,6 +12,6 @@ public class RedirectHandlerTest {
         Dispatcher dispatcher = new Dispatcher();
         Response response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();
-        assertEquals("HTTP/1.0 301 Moved Permanently\r\nLocation: /\nContent-Type: text/plain\r\n\n", fullResponse);
+        assertEquals("HTTP/1.0 301 Moved Permanently\r\nLocation: http://localhost:5000/\nContent-Type: text/plain\r\n\n", fullResponse);
     }
 }

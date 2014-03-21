@@ -3,7 +3,7 @@ public class RedirectHandler {
 
     public Response handle(Request request) throws Exception {
         response = new Response(request);
-        response.set301Response();
+        response.setRedirectResponse();
         return response;
     }
 }

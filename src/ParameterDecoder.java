@@ -29,11 +29,11 @@ public class ParameterDecoder {
     }
 
     private void decodeSubString(int i) {
-        StringBuilder decodedString = new StringBuilder(params);
+        StringBuilder decodedStringBuilder = new StringBuilder(params);
         String encodedSubString = params.substring(i, i + 3);
         String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
-        decodedString.replace(i, i + 3, decodedSubString);
-        params = decodedString.toString();
+        decodedStringBuilder.replace(i, i + 3, decodedSubString);
+        params = decodedStringBuilder.toString();
     }
 
     private void splitParams() {

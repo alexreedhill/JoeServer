@@ -42,7 +42,7 @@ public class ResponseTest {
         request = new Request("GET /redirect HTTP/1.1");
         response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();
-        assertEquals("HTTP/1.1 301 Moved Permanently\r\nLocation: http://localhost:5000/\nContent-Type: text/plain\r\n\n", fullResponse);
+        assertEquals("HTTP/1.1 307 Moved Temporarily\r\nLocation: http://localhost:5000/\nContent-Type: text/plain\r\n\n", fullResponse);
     }
 
 }

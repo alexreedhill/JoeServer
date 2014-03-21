@@ -29,7 +29,6 @@ public class Server {
             server.run();
         } catch(Exception ex) {
             System.err.println(ex);
-            System.exit(1);
         }
     }
 

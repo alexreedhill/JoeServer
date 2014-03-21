@@ -5,7 +5,7 @@ public class PostHandler implements RequestHandler {
 
     public Response handle(Request request) throws IOException {
         response = new Response(request);
-        response.set200Response();
+        response.setStatusCode("200");
         return response;
     }
 }

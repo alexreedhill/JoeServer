@@ -7,19 +7,19 @@ public class GetHandler implements RequestHandler {
     public Response handle(Request request) throws IOException {
         response = new Response(request);
         if(response.request.path.equals("/")) {
-            response.set200Response();
+            response.setStatusCode("200");
         } else {
             try {
                 openResource();
             } catch(IOException ex) {
-                response.set404Response();
+                response.setStatusCode("404");
             }
         }
         return response;
     }
 
     public void openResource() throws IOException {
-        response.set200Response();
+        response.setStatusCode("200");
         response.setBody(fileReader.read(response.request.path));
     }
 }

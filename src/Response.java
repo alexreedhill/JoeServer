@@ -6,6 +6,7 @@ import java.util.Map;
 public class Response {
     public Request request;
     private String statusCode;
+    private String statusLine;
     private byte[] body = new byte[0];
     private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
     private Map<String, String> HEADERS = new HashMap<String, String>();
@@ -16,7 +17,7 @@ public class Response {
         Map<String, String> messages = new HashMap<String, String>();
         messages.put("200", "OK");
         messages.put("404", "Not Found");
-        messages.put("301", "Moved Permanently");
+        messages.put("307", "Moved Temporarily");
         return Collections.unmodifiableMap(messages);
     }
 
@@ -24,55 +25,31 @@ public class Response {
         this.request = request;
     }
 
-    public void set200Response() throws IOException {
-        statusCode = "200";
-    }
-
-    public void set404Response() throws IOException {
-        statusCode = "404";
-    }
-
-    public void set301Response() throws IOException {
-        statusCode = "301";
-        setHeader("Location", "http://localhost:5000/");
-    }
-
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    public void setHeader(String header, String value) {
-        HEADERS.put(header, value);
-    }
-
-    public String getHeaderValue(String header) {
-        return HEADERS.get(header);
-    }
-
     public byte[] respond() throws Exception {
-        byte[] metadata = (buildStatusLine() + buildHeaders()).getBytes();
+        buildHeaders();
+        buildStatusLine();
+        byte[] metadata = (statusLine + headers).getBytes();
         byte[] fullResponse = new byte[metadata.length + body.length];
         System.arraycopy(metadata, 0, fullResponse, 0, metadata.length);
         System.arraycopy(body, 0, fullResponse, metadata.length, body.length);
         return fullResponse;
     }
 
-    private String buildStatusLine() {
-        return request.httpVersion + " " + statusCode + " " + getStatusMessage() + "\r\n";
+    private void buildStatusLine() {
+        statusLine = request.httpVersion + " " + statusCode + " " + getStatusMessage() + "\r\n";
     }
 
     public String getStatusMessage() {
         return STATUS_MESSAGES.get(statusCode);
     }
 
-    private String buildHeaders() throws Exception {
+    private void buildHeaders() throws Exception {
         buildContentTypeHeader();
         int i = 1;
         for(Map.Entry entry : HEADERS.entrySet()) {
             buildHeader(entry, i);
             i++;
         }
-        return headers;
     }
 
     private void buildContentTypeHeader() throws IOException {
@@ -86,11 +63,28 @@ public class Response {
 
     private void buildHeader(Map.Entry entry, int i) {
         headers += entry.getKey() + ": " + entry.getValue();
-        if(i < HEADERS.size()) {
-            headers += "\n";
-        } else {
-            headers += "\r\n\n";
-        }
+        headers += i < HEADERS.size() ? "\n" : "\r\n\n";
+    }
+
+    public void setStatusCode(String statusCode) throws IOException {
+        this.statusCode = statusCode;
+    }
+
+    public void setRedirectResponse() throws IOException {
+        statusCode = "307";
+        setHeader("Location", "http://localhost:5000/");
+    }
+
+    public void setHeader(String header, String value) {
+        HEADERS.put(header, value);
+    }
+
+    public String getHeaderValue(String header) {
+        return HEADERS.get(header);
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
     }
 
     public String convertToString() throws Exception {

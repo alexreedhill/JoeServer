@@ -1,7 +1,5 @@
 import org.junit.Test;
-
 import java.util.HashMap;
-
 import static org.junit.Assert.assertEquals;
 
 public class ParameterDecoderTest {
@@ -27,8 +25,8 @@ public class ParameterDecoderTest {
     public void returnsHashMapWithParamValues() {
         String string = "variable_1=stuff&variable_2=more_stuff";
         decoder = new ParameterDecoder(string);
-        HashMap<String, String> params = decoder.decode();
-        assertEquals(params.get("variable_1"), "stuff");
-        assertEquals(params.get("variable_2"), "more_stuff");
+        HashMap<String, String> paramsHash = decoder.decode();
+        assertEquals(paramsHash.get("variable_1"), "stuff");
+        assertEquals(paramsHash.get("variable_2"), "more_stuff");
     }
 }

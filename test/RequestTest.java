@@ -2,10 +2,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 
-
-/**
- * Created by alexhill on 3/17/14.
- */
 public class RequestTest{
     private Request request;
 

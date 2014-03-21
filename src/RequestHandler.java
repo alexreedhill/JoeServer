@@ -1,4 +1,4 @@
 
 public interface RequestHandler {
-    public Response handle(Request request) throws Exception;
+    public Response handle() throws Exception;
 }

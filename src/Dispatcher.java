@@ -17,7 +17,8 @@ public class Dispatcher {
         String method = request.method;
         String classNamePrefix = method.substring(0, 1) + method.substring(1, method.length()).toLowerCase();
         Class<?> handlerClass = Class.forName(classNamePrefix + "Handler");
-        Method handleMethod = handlerClass.getMethod("handle", Request.class);
-        response = (Response)handleMethod.invoke(handlerClass.newInstance(), request);
+        Object handlerClassInstance = handlerClass.getDeclaredConstructor(Request.class).newInstance(request);
+        Method handleMethod = handlerClass.getMethod("handle");
+        response = (Response)handleMethod.invoke(handlerClassInstance);
     }
 }

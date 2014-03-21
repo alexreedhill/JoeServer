@@ -1,11 +1,16 @@
 import java.io.IOException;
 
 public class GetHandler implements RequestHandler {
+    private Request request;
     private Response response;
     private FileReader fileReader = new FileReader();
 
-    public Response handle(Request request) throws IOException {
+    public GetHandler(Request request) throws IOException {
+        this.request = request;
         response = new Response(request);
+    }
+
+    public Response handle() throws IOException {
         if(response.request.path.equals("/")) {
             response.setStatusCode("200");
         } else {
@@ -20,6 +25,10 @@ public class GetHandler implements RequestHandler {
 
     public void openResource() throws IOException {
         response.setStatusCode("200");
-        response.setBody(fileReader.read(response.request.path));
+        response.setBody(fileReader.read(request.path));
+    }
+
+    public Boolean restrictedRoute() {
+        return request.path.equals("/logs");
     }
 }

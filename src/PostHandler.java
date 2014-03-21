@@ -3,8 +3,11 @@ import java.io.IOException;
 public class PostHandler implements RequestHandler {
     private Response response;
 
-    public Response handle(Request request) throws IOException {
+    public PostHandler(Request request) throws Exception {
         response = new Response(request);
+    }
+
+    public Response handle() throws IOException {
         response.setStatusCode("200");
         return response;
     }

@@ -9,7 +9,7 @@ public class OptionsHandler implements RequestHandler {
 
     public Response handle()throws IOException {
         response.setHeader("Allow", "GET,HEAD,POST,OPTIONS,PUT");
-        response.setStatusCode("200");
+        response.statusCode = "200";
         return response;
     }
 }

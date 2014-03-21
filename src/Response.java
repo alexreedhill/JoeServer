@@ -5,12 +5,12 @@ import java.util.Map;
 
 public class Response {
     public Request request;
-    private String statusCode;
-    private String statusLine;
-    private byte[] body = new byte[0];
-    private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
-    private Map<String, String> HEADERS = new HashMap<String, String>();
-    private String headers = "";
+    public String statusCode;
+    public String statusLine;
+    public byte[] body = new byte[0];
+    public String headerLines = "";
+    public static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
+    private Map<String, String> headers = new HashMap<String, String>();
     private FileReader fileReader = new FileReader();
 
     private static Map<String, String> createStatusMessages() {
@@ -26,10 +26,22 @@ public class Response {
         this.request = request;
     }
 
+    public void setHeader(String header, String value) {
+        headers.put(header, value);
+    }
+
+    public String getHeaderValue(String header) {
+        return headers.get(header);
+    }
+
+    public String convertToString() throws Exception {
+        return new String(respond());
+    }
+
     public byte[] respond() throws Exception {
         buildHeaders();
         buildStatusLine();
-        byte[] metadata = (statusLine + headers).getBytes();
+        byte[] metadata = (statusLine + headerLines).getBytes();
         byte[] fullResponse = new byte[metadata.length + body.length];
         System.arraycopy(metadata, 0, fullResponse, 0, metadata.length);
         System.arraycopy(body, 0, fullResponse, metadata.length, body.length);
@@ -40,14 +52,14 @@ public class Response {
         statusLine = request.httpVersion + " " + statusCode + " " + getStatusMessage() + "\r\n";
     }
 
-    public String getStatusMessage() {
+    private String getStatusMessage() {
         return STATUS_MESSAGES.get(statusCode);
     }
 
     private void buildHeaders() throws Exception {
         buildContentTypeHeader();
         int i = 1;
-        for(Map.Entry entry : HEADERS.entrySet()) {
+        for(Map.Entry entry : headers.entrySet()) {
             buildHeader(entry, i);
             i++;
         }
@@ -56,37 +68,12 @@ public class Response {
     private void buildContentTypeHeader() throws IOException {
         if(request.method.equals("GET") && statusCode.equals("200")) {
             String mimeType = fileReader.getMimeType(request.path);
-            HEADERS.put("Content-Type", mimeType);
+            headers.put("Content-Type", mimeType);
         }
     }
 
     private void buildHeader(Map.Entry entry, int i) {
-        headers += entry.getKey() + ": " + entry.getValue();
-        headers += i < HEADERS.size() ? "\n" : "\r\n\n";
-    }
-
-    public void setStatusCode(String statusCode) throws IOException {
-        this.statusCode = statusCode;
-    }
-
-    public void setRedirectResponse() throws IOException {
-        statusCode = "307";
-        setHeader("Location", "http://localhost:5000/");
-    }
-
-    public void setHeader(String header, String value) {
-        HEADERS.put(header, value);
-    }
-
-    public String getHeaderValue(String header) {
-        return HEADERS.get(header);
-    }
-
-    public void setBody(byte[] body) {
-        this.body = body;
-    }
-
-    public String convertToString() throws Exception {
-        return new String(respond());
+        headerLines += entry.getKey() + ": " + entry.getValue();
+        headerLines += i < headers.size() ? "\n" : "\r\n\n";
     }
 }

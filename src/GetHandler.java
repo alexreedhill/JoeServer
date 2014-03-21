@@ -15,7 +15,7 @@ public class GetHandler implements RequestHandler {
 
     public Response handle() throws IOException {
         if(response.request.path.equals("/")) {
-            response.setStatusCode("200");
+            response.statusCode = "200";
         } else {
             if(restrictedRoute()) {
                 response = auth.authenticate();
@@ -23,15 +23,15 @@ public class GetHandler implements RequestHandler {
             try {
                 openResource();
             } catch(IOException ex) {
-                response.setStatusCode("404");
+                response.statusCode = "404";
             }
         }
         return response;
     }
 
     public void openResource() throws IOException {
-        response.setStatusCode("200");
-        response.setBody(fileReader.read(request.path));
+        response.statusCode = "200";
+        response.body = fileReader.read(request.path);
     }
 
     public Boolean restrictedRoute() {

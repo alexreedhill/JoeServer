@@ -8,7 +8,7 @@ public class PostHandler implements RequestHandler {
     }
 
     public Response handle() throws IOException {
-        response.setStatusCode("200");
+        response.statusCode = "200";
         return response;
     }
 }

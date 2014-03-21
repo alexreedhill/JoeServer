@@ -8,7 +8,12 @@ public class RedirectHandler {
     }
 
     public Response handle() throws Exception {
-        response.setRedirectResponse();
+        setRedirectResponse();
         return response;
+    }
+
+    private void setRedirectResponse() {
+        response.statusCode = "307";
+        response.setHeader("Location", "http://localhost:5000/");
     }
 }

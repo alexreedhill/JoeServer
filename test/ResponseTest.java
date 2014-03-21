@@ -26,7 +26,7 @@ public class ResponseTest {
     public void returnsCorrectStatusMessageFor200StatusCode() throws Exception {
         request = new Request("GET /file1 HTTP/1.0");
         response = dispatcher.dispatch(request);
-        String statusMessage = response.getStatusMessage();
+        String statusMessage = response.STATUS_MESSAGES.get(response.statusCode);
         assertEquals("OK", statusMessage);
     }
 

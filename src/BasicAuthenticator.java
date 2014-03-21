@@ -9,7 +9,7 @@ public class BasicAuthenticator {
 
     public Response authenticate() throws IOException {
         response.setHeader("WWW-Authenticate", "Basic realm=\"JoeServer\"");
-        response.setStatusCode("401");
+        response.statusCode = "401";
         return response;
     }
 }

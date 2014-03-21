@@ -5,12 +5,12 @@ import java.util.Map;
 
 public class Response {
     public Request request;
-    private FileReader fileReader;
     private String statusCode;
     private byte[] body = new byte[0];
     private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
     private Map<String, String> HEADERS = new HashMap<String, String>();
     private String headers = "";
+    private FileReader fileReader = new FileReader();
 
     private static Map<String, String> createStatusMessages() {
         Map<String, String> messages = new HashMap<String, String>();
@@ -22,12 +22,6 @@ public class Response {
 
     public Response(Request request) throws IOException {
         this.request = request;
-        fileReader = new FileReader();
-    }
-
-    public void openResource() throws IOException {
-        set200Response();
-        body = fileReader.read(request.path);
     }
 
     public void set200Response() throws IOException {
@@ -41,6 +35,10 @@ public class Response {
     public void set301Response() throws IOException {
         statusCode = "301";
         setHeader("Location", "http://localhost:5000/");
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
     }
 
     public void setHeader(String header, String value) {

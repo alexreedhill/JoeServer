@@ -35,11 +35,7 @@ public class FileReader {
     }
 
     private String getMimeTypeFromFileExtension(String extension) {
-        String mimeType;
-        if ((mimeType = MIME_TYPES.get(extension)) != null) {
-            return mimeType;
-        } else {
-            return "text/plain";
-        }
+        String mimeType = MIME_TYPES.get(extension);
+        return mimeType == null ? "text/plain" : mimeType;
     }
 }

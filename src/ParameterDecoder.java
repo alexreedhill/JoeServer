@@ -2,43 +2,51 @@ import java.util.HashMap;
 
 public class ParameterDecoder {
     private static final HashMap<String, Character> CONVERSIONS = createConversions();
+    private String params;
+    private HashMap<String, String> paramsHash;
 
-    public HashMap<String, String> decode(String params) {
-        String decodedParams = decodeString(params);
-        return splitParams(decodedParams);
+    public ParameterDecoder(String params) {
+        this.params = params;
     }
 
-    public String decodeString(String string) {
-        for (int i = 0; i < string.length(); i++){
-            char c = string.charAt(i);
-            if(c == '%') {
-                string = decodeSubString(string, i);
-            }
-        }
-        return string;
+    public HashMap<String, String> decode() {
+        decodeString();
+        splitParams();
+        return paramsHash;
     }
 
-    private String decodeSubString(String string, int i) {
-        StringBuilder decodedString = new StringBuilder(string);
-        String encodedSubString = string.substring(i, i + 3);
-        String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
-        decodedString.replace(i, i + 3, decodedSubString);
-        return decodedString.toString();
-    }
-
-    private HashMap<String, String> splitParams(String stringParams) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        String[] splitParams =  stringParams.split("&");
-        for(int i = 0; i < splitParams.length; i++) {
-            splitParam(params, splitParams, i);
-        }
+    public String getParams() {
         return params;
     }
 
-    private void splitParam(HashMap<String, String> params, String[] splitParams, int i) {
-        String param = splitParams[i];
+    public void decodeString() {
+        for (int i = 0; i < params.length(); i++) {
+            char c = params.charAt(i);
+            if(c == '%') {
+                decodeSubString(i);
+            }
+        }
+    }
+
+    private void decodeSubString(int i) {
+        StringBuilder decodedString = new StringBuilder(params);
+        String encodedSubString = params.substring(i, i + 3);
+        String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
+        decodedString.replace(i, i + 3, decodedSubString);
+        params = decodedString.toString();
+    }
+
+    private void splitParams() {
+        paramsHash = new HashMap<String, String>();
+        String[] splitParams =  params.split("&");
+        for (String param : splitParams) {
+            splitParam(param);
+        }
+    }
+
+    private void splitParam(String param) {
         String[] splitParam = param.split("=");
-        params.put(splitParam[0], splitParam[1]);
+        paramsHash.put(splitParam[0], splitParam[1]);
     }
 
     private static HashMap<String, Character> createConversions() {

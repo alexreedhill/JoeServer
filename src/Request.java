@@ -12,11 +12,6 @@ public class Request {
         String[] splitRawRequest = rawRequest.split(" ");
         path = splitRawRequest[1];
         httpVersion = splitRawRequest[2];
-        System.out.println("Path: " + path);
-        if(path.equals("/redirect")) {
-            method = "REDIRECT";
-        } else {
-            method = splitRawRequest[0];
-        }
+        method = path.equals("/redirect") ? "REDIRECT" : splitRawRequest[0];
     }
 }

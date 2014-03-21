@@ -19,7 +19,7 @@ public class ResponseTest {
         request = new Request("GET /foobar HTTP/1.0");
         response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();
-        assertEquals("HTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\n\n", fullResponse);
+        assertEquals("HTTP/1.0 404 Not Found\r\n", fullResponse);
     }
 
     @Test
@@ -35,14 +35,14 @@ public class ResponseTest {
         request = new Request("POST /form HTTP/1.1");
         response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();
-        assertEquals("HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\n\n", fullResponse);
+        assertEquals("HTTP/1.1 200 OK\r\n", fullResponse);
     }
 
     @Test public void setsLocationHeader() throws Exception {
         request = new Request("GET /redirect HTTP/1.1");
         response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();
-        assertEquals("HTTP/1.1 307 Moved Temporarily\r\nLocation: http://localhost:5000/\nContent-Type: text/plain\r\n\n", fullResponse);
+        assertEquals("HTTP/1.1 307 Moved Temporarily\r\nLocation: http://localhost:5000/\r\n\n", fullResponse);
     }
 
 }

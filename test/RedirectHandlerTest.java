@@ -15,6 +15,6 @@ public class RedirectHandlerTest {
     public void redirectsToRoot() throws Exception{
         Response response = redirectHandler.handle();
         String fullResponse = response.convertToString();
-        assertEquals("HTTP/1.0 307 Moved Temporarily\r\nLocation: http://localhost:5000/\nContent-Type: text/plain\r\n\n", fullResponse);
+        assertEquals("HTTP/1.0 307 Moved Temporarily\r\nLocation: http://localhost:5000/\r\n\n", fullResponse);
     }
 }

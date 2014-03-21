@@ -18,6 +18,7 @@ public class Response {
         messages.put("200", "OK");
         messages.put("404", "Not Found");
         messages.put("307", "Moved Temporarily");
+        messages.put("401", "Unauthorized");
         return Collections.unmodifiableMap(messages);
     }
 
@@ -56,8 +57,6 @@ public class Response {
         if(request.method.equals("GET") && statusCode.equals("200")) {
             String mimeType = fileReader.getMimeType(request.path);
             HEADERS.put("Content-Type", mimeType);
-        } else {
-            HEADERS.put("Content-Type", "text/plain");
         }
     }
 

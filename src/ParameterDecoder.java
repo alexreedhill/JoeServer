@@ -1,43 +1,22 @@
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ParameterDecoder {
-    private static final HashMap<String, Character> CONVERSIONS = createConversions();
+    private static final LinkedHashMap<String, Character> CONVERSIONS = createConversions();
     private String params;
-    private HashMap<String, String> paramsHash;
+    private LinkedHashMap<String, String> paramsHash = new LinkedHashMap<String, String>();
 
     public ParameterDecoder(String params) {
         this.params = params;
     }
 
-    public HashMap<String, String> decode() {
+    public LinkedHashMap<String, String> decode() {
+        splitParamsIntoKeyAndValue();
         decodeString();
-        splitParams();
         return paramsHash;
     }
 
-    public String getParams() {
-        return params;
-    }
-
-    public void decodeString() {
-        for (int i = 0; i < params.length(); i++) {
-            char c = params.charAt(i);
-            if(c == '%') {
-                decodeSubString(i);
-            }
-        }
-    }
-
-    private void decodeSubString(int i) {
-        StringBuilder decodedStringBuilder = new StringBuilder(params);
-        String encodedSubString = params.substring(i, i + 3);
-        String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
-        decodedStringBuilder.replace(i, i + 3, decodedSubString);
-        params = decodedStringBuilder.toString();
-    }
-
-    private void splitParams() {
-        paramsHash = new HashMap<String, String>();
+    private void splitParamsIntoKeyAndValue() {
         String[] splitParams =  params.split("&");
         for (String param : splitParams) {
             splitParam(param);
@@ -45,12 +24,36 @@ public class ParameterDecoder {
     }
 
     private void splitParam(String param) {
-        String[] splitParam = param.split("=");
-        paramsHash.put(splitParam[0], splitParam[1]);
+        try {
+            String[] splitParam = param.split("=", 2);
+            paramsHash.put(splitParam[0], splitParam[1]);
+        } catch(ArrayIndexOutOfBoundsException ex) {}
+
     }
 
-    private static HashMap<String, Character> createConversions() {
-        HashMap<String, Character> conversions = new HashMap<String, Character>();
+    private void decodeString() {
+        for(Map.Entry entry : paramsHash.entrySet()) {
+            String value = (String)entry.getValue();
+            for (int i = 0; i < value.length(); i++) {
+                char c = value.charAt(i);
+                if(c == '%') {
+                    decodeSubString(i, entry, value);
+                    value = (String)entry.getValue();
+                }
+            }
+        }
+    }
+
+    private void decodeSubString(int i, Map.Entry entry, String value) {
+        StringBuilder decodedStringBuilder = new StringBuilder(value);
+        String encodedSubString = value.substring(i, i + 3);
+        String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
+        decodedStringBuilder.replace(i, i + 3, decodedSubString);
+        entry.setValue(decodedStringBuilder.toString());
+    }
+
+    private static LinkedHashMap<String, Character> createConversions() {
+        LinkedHashMap<String, Character> conversions = new LinkedHashMap<String, Character>();
         conversions.put("%20", ' ');
         conversions.put("%21", '!');
         conversions.put("%22", '"');

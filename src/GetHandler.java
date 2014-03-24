@@ -6,6 +6,7 @@ public class GetHandler implements RequestHandler {
     private FileReader fileReader;
     private BasicAuthenticator auth;
 
+
     public GetHandler(Request request) throws IOException {
         this.request = request;
         response = new Response(request);
@@ -14,12 +15,14 @@ public class GetHandler implements RequestHandler {
     }
 
     public Response handle() throws IOException {
-        if(response.request.path.equals("/")) {
+        if(request.path.equals("/")) {
             response.statusCode = "200";
+        } else if(restrictedRoute()) {
+            response = auth.authenticate();
+        } else if(request.path.equals("/parameters")) {
+            response.statusCode = "200";
+            response.body = (request.convertParamsToString()).getBytes();
         } else {
-            if(restrictedRoute()) {
-                response = auth.authenticate();
-            }
             try {
                 openResource();
             } catch(IOException ex) {
@@ -29,7 +32,7 @@ public class GetHandler implements RequestHandler {
         return response;
     }
 
-    public void openResource() throws IOException {
+    private void openResource() throws IOException {
         response.statusCode = "200";
         response.body = fileReader.read(request.path);
     }

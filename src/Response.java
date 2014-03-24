@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Response {
-    public Request request;
     public String statusCode;
-    public String statusLine;
     public byte[] body = new byte[0];
-    public String headerLines = "";
     public static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
+    private Request request;
+    private String statusLine;
+    private String headerLines = "";
     private Map<String, String> headers = new HashMap<String, String>();
     private FileReader fileReader = new FileReader();
 

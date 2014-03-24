@@ -11,7 +11,7 @@ public class GetHandler implements RequestHandler {
         this.request = request;
         response = new Response(request);
         fileReader = new FileReader();
-        auth = new BasicAuthenticator(response);
+        auth = new BasicAuthenticator(request, response);
     }
 
     public Response handle() throws IOException {
@@ -21,7 +21,7 @@ public class GetHandler implements RequestHandler {
             response = auth.authenticate();
         } else if(request.path.equals("/parameters")) {
             response.statusCode = "200";
-            response.body = (request.convertParamsToString()).getBytes();
+            response.body = request.convertParamsToBytes();
         } else {
             try {
                 openResource();

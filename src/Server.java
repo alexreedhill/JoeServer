@@ -45,9 +45,11 @@ public class Server {
 
     private String parseFullRawRequest() throws IOException {
         String rawRequestLine = in.readLine();
+        System.out.println("Raw request line: " + rawRequestLine);
         String fullRawRequest = rawRequestLine + "\r\n";
         while(!requestHeaderComplete(rawRequestLine)) {
             rawRequestLine = in.readLine();
+            System.out.println("Raw request line: " + rawRequestLine);
             fullRawRequest += rawRequestLine + "\n";
         }
         return fullRawRequest;
@@ -63,7 +65,7 @@ public class Server {
     private byte[] createResponse(Request request) throws Exception {
         Response response = dispatcher.dispatch(request);
         byte [] fullResponse = response.respond();
-        System.out.println("Full response;" + new String(fullResponse, "UTF-8"));
+        System.out.println("Full response: " + new String(fullResponse, "UTF-8"));
         return fullResponse;
     }
 

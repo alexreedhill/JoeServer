@@ -14,7 +14,7 @@ public class GetHandler implements RequestHandler {
         auth = new BasicAuthenticator(request, response);
     }
 
-    public Response handle() throws `Exception {
+    public Response handle() throws IOException {
         if(request.path.equals("/")) {
             response.statusCode = "200";
         } else if(restrictedRoute()) {

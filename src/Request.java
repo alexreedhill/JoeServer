@@ -27,7 +27,7 @@ public class Request {
         String statusLine = splitRawRequest[0];
         String[] splitStatusLine = statusLine.split(" ");
         try {
-            splitPathFromParams(splitRawRequest[1]);
+            splitPathFromParams(splitStatusLine[1]);
         } catch(ArrayIndexOutOfBoundsException ex) {
             path = splitStatusLine[1];
             rawParams = "";
@@ -61,12 +61,12 @@ public class Request {
     public String convertParamsToString() {
         StringBuilder builder = new StringBuilder();
         for(Map.Entry entry : params.entrySet()) {
-            builder = buildString(builder, entry);
+            builder = buildParamsString(builder, entry);
         }
         return builder.toString();
     }
 
-    private StringBuilder buildString(StringBuilder builder, Map.Entry entry) {
+    private StringBuilder buildParamsString(StringBuilder builder, Map.Entry entry) {
         builder.append(entry.getKey());
         builder.append(" = ");
         builder.append(entry.getValue());

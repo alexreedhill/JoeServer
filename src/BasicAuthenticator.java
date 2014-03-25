@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import org.apache.commons.codec.binary.Base64;
 
 public class BasicAuthenticator {
@@ -11,7 +13,7 @@ public class BasicAuthenticator {
         this.response = response;
     }
 
-    public Response authenticate() throws Exception {
+    public Response authenticate() throws IOException {
         try {
             decodeAuthHeader();
             checkDecodedAuthHeader();
@@ -21,11 +23,14 @@ public class BasicAuthenticator {
         return response;
     }
 
-    private void decodeAuthHeader() throws Exception {
+    private void decodeAuthHeader() throws UnsupportedEncodingException {
         String authHeader = request.headers.get("Authorization");
-        String encodedString = authHeader.split(" ")[1];
-        byte[] bytes = Base64.decodeBase64(encodedString);
-        decodedAuthHeader = new String(bytes, "UTF-8");
+        try {
+            String encodedString = authHeader.split(" ")[1];
+            byte[] bytes = Base64.decodeBase64(encodedString);
+            decodedAuthHeader = new String(bytes, "UTF-8");
+        } catch(ArrayIndexOutOfBoundsException ex) { }
+
     }
 
     private void checkDecodedAuthHeader() {

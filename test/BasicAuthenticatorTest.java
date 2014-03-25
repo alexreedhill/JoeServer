@@ -1,15 +1,21 @@
+import org.junit.Before;
 import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import org.apache.commons.codec.binary.Base64;
 
 public class BasicAuthenticatorTest {
-    private BasicAuthenticator auth;
     private Response response;
     private GetHandler handler;
+    private RequestBuilder builder;
+
+    @Before
+    public void setupBuilder() {
+        builder  = new RequestBuilder();
+    }
 
     @Test
     public void addsCorrectStatusAndHeadersToResponseOnUnauthenticatedRequest() throws Exception {
-        Request request = new Request("GET /logs HTTP/1.1");
+        Request request = builder.build("GET /logs HTTP/1.1");
         handler = new GetHandler(request);
         response = handler.handle();
         String stringResponse = response.convertToString();
@@ -19,7 +25,7 @@ public class BasicAuthenticatorTest {
     @Test public void addsCorrectStatusAndHeadersToResponseOnAuthenticatedRequest() throws Exception {
         byte[] bytes = "admin:hunter2".getBytes();
         String encodedAuthorizationString = Base64.encodeBase64String(bytes);
-        Request request = new Request("GET /logs HTTP/1.1\r\nAuthorization: Basic " + encodedAuthorizationString);
+        Request request = builder.build("GET /logs HTTP/1.1\r\nAuthorization: Basic " + encodedAuthorizationString);
         handler = new GetHandler(request);
         response = handler.handle();
         String stringResponse = response.convertToString();

@@ -35,7 +35,7 @@ public class Server {
             setupStreams();
             String fullRawRequest = parseFullRawRequest();
             if (validRequest(fullRawRequest) ) {
-                Request request = new Request(fullRawRequest);
+                Request request = new RequestBuilder().build(fullRawRequest);
                 serveResponse(createResponse(request));
             }
             clientSocket.close();

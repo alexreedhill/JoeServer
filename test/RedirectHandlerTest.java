@@ -4,10 +4,12 @@ import static junit.framework.Assert.assertEquals;
 
 public class RedirectHandlerTest {
     private RedirectHandler redirectHandler;
+    private RequestBuilder builder;
 
     @Before
     public void setUpRequest() throws Exception {
-        Request request = new Request("GET /redirect HTTP/1.0");
+        builder = new RequestBuilder();
+        Request request = builder.build("GET /redirect HTTP/1.0");
         redirectHandler = new RedirectHandler(request);
     }
 

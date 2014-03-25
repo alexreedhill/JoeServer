@@ -7,7 +7,8 @@ public class OptionsHandlerTest {
 
     @Before
     public void setUpRequest() throws Exception {
-        Request request = new Request("OPTIONS /method_options HTTP/1.0");
+        RequestBuilder builder = new RequestBuilder();
+        Request request = builder.build("OPTIONS /method_options HTTP/1.0");
         optionsHandler = new OptionsHandler(request);
     }
 

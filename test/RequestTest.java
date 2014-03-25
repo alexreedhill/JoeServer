@@ -44,4 +44,11 @@ public class RequestTest{
         request = new Request("GET /path/to/file.html HTTP/1.1\r\nAuthorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
         assertEquals(request.headers.get("Authorization"), "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
     }
+
+    @Test
+    public void splitsPathFromParams() throws Exception {
+        request = new Request("GET /parameters?foo=bar HTTP/1.1\r\nAuthorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
+        assertEquals("/parameters", request.path);
+        assertEquals("bar", request.params.get("foo") );
+    }
 }

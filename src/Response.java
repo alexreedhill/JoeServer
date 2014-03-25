@@ -23,5 +23,4 @@ public class Response {
     public String convertToString() throws Exception {
         return new String(fullResponse);
     }
-
 }

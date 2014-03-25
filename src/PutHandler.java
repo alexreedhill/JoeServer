@@ -2,21 +2,21 @@ import java.util.ArrayList;
 
 public class PutHandler implements RequestHandler {
     private Request request;
-    private Response response;
+    private ResponseBuilder builder;
     private ArrayList methodNotAllowedUrls = createMethodNotAllowedUrls();
 
     public PutHandler(Request request) throws Exception {
         this.request = request;
-        response = new Response(request);
+        builder = new ResponseBuilder(request);
     }
 
-    public Response handle() {
+    public Response handle() throws Exception {
         if(methodNotAllowed()) {
-            response.statusCode = "405";
+            builder.buildMethodNotAllowedResponse();
         } else {
-            response.statusCode = "200";
+            builder.buildOKResponse();
         }
-        return response;
+        return builder.buildFullResponse();
     }
 
     private boolean methodNotAllowed() {

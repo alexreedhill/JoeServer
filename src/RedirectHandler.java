@@ -1,19 +1,13 @@
-import java.io.IOException;
 
 public class RedirectHandler {
-    private Response response;
+    private ResponseBuilder builder;
 
-    public RedirectHandler(Request request) throws IOException {
-        response = new Response(request);
+    public RedirectHandler(Request request) throws Exception {
+        builder = new ResponseBuilder(request);
     }
 
     public Response handle() throws Exception {
-        setRedirectResponse();
-        return response;
-    }
-
-    private void setRedirectResponse() {
-        response.statusCode = "307";
-        response.setHeader("Location", "http://localhost:5000/");
+        builder.buildRedirectResponse();
+        return builder.buildFullResponse();
     }
 }

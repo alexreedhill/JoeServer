@@ -1,15 +1,14 @@
 import java.io.IOException;
 
 public class OptionsHandler implements RequestHandler {
-    private Response response;
+    private ResponseBuilder builder;
 
-    public OptionsHandler(Request request) throws IOException {
-        response = new Response(request);
+    public OptionsHandler(Request request) throws Exception {
+        builder = new ResponseBuilder(request);
     }
 
-    public Response handle()throws IOException {
-        response.setHeader("Allow", "GET,HEAD,POST,OPTIONS,PUT");
-        response.statusCode = "200";
-        return response;
+    public Response handle()throws Exception {
+        builder.buildOptionsResponse();
+        return builder.buildFullResponse();
     }
 }

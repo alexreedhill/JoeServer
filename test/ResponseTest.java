@@ -5,14 +5,11 @@ public class ResponseTest {
     private Request request;
     private Dispatcher dispatcher = new Dispatcher();
     private Response response;
-    private ResponseFactory factory;
 
     @Test
     public void returnsResponseWithFileContentsAndStatusCode() throws Exception {
         request = new Request("GET /file1 HTTP/1.0");
         response = dispatcher.dispatch(request);
-        factory = new ResponseFactory(response);
-        factory.buildFullResponse();
         String fullResponse = response.convertToString();
         assertEquals("HTTP/1.0 200 OK\r\nContent-Type: text/plain\r\n\nfile1 contents", fullResponse);
     }
@@ -21,8 +18,6 @@ public class ResponseTest {
     public void returns404ResponseWhenNoFileLocated() throws Exception {
         request = new Request("GET /foobar HTTP/1.0");
         response = dispatcher.dispatch(request);
-        factory = new ResponseFactory(response);
-        factory.buildFullResponse();
         String fullResponse = response.convertToString();
         assertEquals("HTTP/1.0 404 Not Found\r\n", fullResponse);
     }
@@ -31,8 +26,6 @@ public class ResponseTest {
     public void returns200OnPostRequest() throws Exception {
         request = new Request("POST /form HTTP/1.1");
         response = dispatcher.dispatch(request);
-        factory = new ResponseFactory(response);
-        factory.buildFullResponse();
         String fullResponse = response.convertToString();
         assertEquals("HTTP/1.1 200 OK\r\n", fullResponse);
     }
@@ -40,8 +33,6 @@ public class ResponseTest {
     @Test public void setsLocationHeader() throws Exception {
         request = new Request("GET /redirect HTTP/1.1");
         response = dispatcher.dispatch(request);
-        factory = new ResponseFactory(response);
-        factory.buildFullResponse();
         String fullResponse = response.convertToString();
         assertEquals("HTTP/1.1 307 Moved Temporarily\r\nLocation: http://localhost:5000/\r\n\n", fullResponse);
     }

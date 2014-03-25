@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
 
-
 public class Server {
     private ServerSocket serverSocket;
     private Socket clientSocket;
@@ -62,8 +61,6 @@ public class Server {
 
     private byte[] createResponse(Request request) throws Exception {
         Response response = dispatcher.dispatch(request);
-        ResponseFactory responseFactory = new ResponseFactory(response);
-        response = responseFactory.buildFullResponse();
         System.out.println("Full response: " + new String(response.fullResponse, "UTF-8"));
         return response.fullResponse;
     }

@@ -3,7 +3,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseFactory {
+public class ResponseBuilder {
     private Response response;
     private Request request;
     private String statusLine;
@@ -11,8 +11,8 @@ public class ResponseFactory {
     private String headerLines = "";
     private FileReader fileReader = new FileReader();
 
-    public ResponseFactory(Response response) throws Exception {
-        this.response = response;
+    public ResponseBuilder(Request request) throws Exception {
+        response = new Response(request);
         this.request = response.request;
     }
 
@@ -26,6 +26,65 @@ public class ResponseFactory {
         response.fullResponse = fullResponse;
         return response;
     }
+
+    public void buildOKResponse() {
+        response.statusCode = "200";
+    }
+
+    public void buildAuthenticatedResponse() throws IOException {
+        BasicAuthenticator auth = new BasicAuthenticator(response);
+        response = auth.authenticate();
+    }
+
+    public void buildParameterResponse() {
+        response.statusCode = "200";
+        response.body = request.convertParamsToBytes();
+    }
+
+    public void buildOptionsResponse() {
+        response.setHeader("Allow", "GET,HEAD,POST,OPTIONS,PUT");
+        response.statusCode = "200";
+    }
+
+    public void buildFileResponse() throws Exception {
+        try {
+            openResource();
+            String rangeHeader;
+            if((rangeHeader = request.headers.get("Range")) != null ) {
+                buildPartialContentResponse(rangeHeader);
+            } else {
+                response.statusCode = "200";
+            }
+        } catch(IOException ex) {
+            response.statusCode = "404";
+        }
+    }
+
+    private void openResource() throws IOException {
+        response.body = fileReader.read(request.path);
+    }
+
+    private void buildPartialContentResponse(String rangeHeader) throws Exception {
+        response.statusCode = "206";
+        String[] splitRangeHeader = rangeHeader.split("-");
+        int start = Integer.parseInt(splitRangeHeader[0].replace("bytes=", ""));
+        int length = Integer.parseInt(splitRangeHeader[1]);
+        response.setHeader("Content-Range", "bytes " + start + "-" + length + "/" + response.body.length);
+        byte[] partialContent = new byte[length];
+        System.arraycopy(response.body, start, partialContent, 0, length);
+        response.body = partialContent;
+    }
+
+    public void buildRedirectResponse() {
+        response.statusCode = "307";
+        response.setHeader("Location", "http://localhost:5000/");
+    }
+
+    public void buildMethodNotAllowedResponse() {
+        response.statusCode = "405";
+    }
+
+
 
     private void buildStatusLine() {
         statusLine = request.httpVersion + " " + response.statusCode + " " + getStatusMessage() + "\r\n";

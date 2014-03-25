@@ -8,9 +8,9 @@ public class BasicAuthenticator {
     private String decodedAuthHeader;
 
 
-    public BasicAuthenticator(Request request, Response response) {
-        this.request = request;
+    public BasicAuthenticator(Response response) {
         this.response = response;
+        request = response.request;
     }
 
     public Response authenticate() throws IOException {

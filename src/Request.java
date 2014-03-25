@@ -23,10 +23,17 @@ public class Request {
     }
 
     private void parseFirstLine() {
-        String[] splitRawRequest = rawRequest.split(" ");
-        splitPathFromParams(splitRawRequest[1]);
-        httpVersion = splitRawRequest[2];
-        method = path.equals("/redirect") ? "REDIRECT" : splitRawRequest[0];
+        String[] splitRawRequest = rawRequest.split("\r\n");
+        String statusLine = splitRawRequest[0];
+        String[] splitStatusLine = statusLine.split(" ");
+        try {
+            splitPathFromParams(splitRawRequest[1]);
+        } catch(ArrayIndexOutOfBoundsException ex) {
+            path = splitStatusLine[1];
+            rawParams = "";
+        }
+        httpVersion = splitStatusLine[2];
+        method = path.equals("/redirect") ? "REDIRECT" : splitStatusLine[0];
     }
 
     private void parseHeaders() {
@@ -45,15 +52,10 @@ public class Request {
         params = decoder.decode();
     }
 
-    private void splitPathFromParams(String fullURL) {
-        try {
-            String[] splitURL = fullURL.split("[?]");
-            path = splitURL[0];
-            rawParams = splitURL[1];
-        } catch(ArrayIndexOutOfBoundsException ex) {
-            path = fullURL;
-            rawParams = "";
-        }
+    private void splitPathFromParams(String fullUrl) {
+        String[] splitURL = fullUrl.split("[?]");
+        path = splitURL[0];
+        rawParams = splitURL[1];
     }
 
     public String convertParamsToString() {

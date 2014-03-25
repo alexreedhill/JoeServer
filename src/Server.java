@@ -14,7 +14,6 @@ public class Server {
     private Socket clientSocket;
     private OutputStream clientOutputStream;
     private BufferedReader in;
-    private String rawRequest;
     private ArrayList invalidRequests;
     private Dispatcher dispatcher = new Dispatcher();
 
@@ -35,11 +34,23 @@ public class Server {
     public void run() throws Exception {
         while(true) {
             setupStreams();
-            if (validRequest() ) {
-                serveResponse(createResponse());
+            String fullRawRequest = parseFullRawRequest();
+            if (validRequest(fullRawRequest) ) {
+                Request request = new Request(fullRawRequest);
+                serveResponse(createResponse(request));
             }
             clientSocket.close();
         }
+    }
+
+    private String parseFullRawRequest() throws IOException {
+        String rawRequestLine = in.readLine();
+        String fullRawRequest = rawRequestLine + "\r\n";
+        while(!requestHeaderComplete(rawRequestLine)) {
+            rawRequestLine = in.readLine();
+            fullRawRequest += rawRequestLine + "\n";
+        }
+        return fullRawRequest;
     }
 
     private void setupStreams() throws IOException {
@@ -49,10 +60,11 @@ public class Server {
         in = new BufferedReader(new InputStreamReader(clientInputStream));
     }
 
-    private byte[] createResponse() throws Exception {
-        Request request = new Request(rawRequest);
+    private byte[] createResponse(Request request) throws Exception {
         Response response = dispatcher.dispatch(request);
-        return response.respond();
+        byte [] fullResponse = response.respond();
+        System.out.println("Full response;" + new String(fullResponse, "UTF-8"));
+        return fullResponse;
     }
 
     private void serveResponse(byte[] fullResponse) throws IOException {
@@ -62,13 +74,16 @@ public class Server {
         writer.close();
     }
 
-    private boolean validRequest() throws IOException {
-        return !invalidRequests.contains(rawRequest = in.readLine());
+    private boolean validRequest(String fullRawRequest) throws IOException {
+        return !invalidRequests.contains(fullRawRequest);
+    }
+
+    private boolean requestHeaderComplete(String rawRequestLine) throws IOException {
+        return rawRequestLine == null || rawRequestLine.equals("") || rawRequestLine.contains("\r\n");
     }
 
     private ArrayList createInvalidRequestsList() {
         return new ArrayList<String>() {{
-            add("Host: localhost:5000");
             add("");
             add(null);
         }};

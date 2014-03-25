@@ -19,6 +19,7 @@ public class Response {
         messages.put("404", "Not Found");
         messages.put("307", "Moved Temporarily");
         messages.put("401", "Unauthorized");
+        messages.put("405", "Method Not Allowed");
         return Collections.unmodifiableMap(messages);
     }
 

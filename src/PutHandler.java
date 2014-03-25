@@ -1,17 +1,16 @@
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class PostHandler implements RequestHandler {
+public class PutHandler implements RequestHandler {
     private Request request;
     private Response response;
     private ArrayList methodNotAllowedUrls = createMethodNotAllowedUrls();
 
-    public PostHandler(Request request) throws Exception {
+    public PutHandler(Request request) throws Exception {
         this.request = request;
         response = new Response(request);
     }
 
-    public Response handle() throws IOException {
+    public Response handle() {
         if(methodNotAllowed()) {
             response.statusCode = "405";
         } else {
@@ -26,7 +25,9 @@ public class PostHandler implements RequestHandler {
 
     private ArrayList createMethodNotAllowedUrls() {
         return new ArrayList<String>() {{
-            add("/text-file.txt");
+            add("/file1");
         }};
     }
+
+
 }

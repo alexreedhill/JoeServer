@@ -1,4 +1,3 @@
-
 public class HeadHandler implements RequestHandler {
     private ResponseBuilder builder;
 

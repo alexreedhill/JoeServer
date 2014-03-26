@@ -37,7 +37,8 @@ public class ResponseTest {
         assertEquals("HTTP/1.1 200 OK\r\n", fullResponse);
     }
 
-    @Test public void setsLocationHeader() throws Exception {
+    @Test
+    public void setsLocationHeader() throws Exception {
         request = builder.build("GET /redirect HTTP/1.1");
         response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();

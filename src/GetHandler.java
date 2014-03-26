@@ -1,19 +1,19 @@
-import java.io.IOException;
-
 public class GetHandler implements RequestHandler {
     private Request request;
     private ResponseBuilder builder;
+    private BasicAuthenticator auth;
 
     public GetHandler(Request request) throws Exception {
         this.request = request;
+        auth = new BasicAuthenticator(request);
         builder = new ResponseBuilder(request);
     }
 
     public Response handle() throws Exception {
         if(request.path.equals("/")) {
-            builder.buildOKResponse();
+            builder.buildDirectoryResponse();
         } else if(restrictedRoute()) {
-            builder.buildAuthenticatedResponse();
+            builder = auth.authenticate();
         } else if(request.path.equals("/parameters")) {
             builder.buildParameterResponse();
         } else {

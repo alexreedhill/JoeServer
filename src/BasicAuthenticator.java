@@ -1,26 +1,24 @@
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import org.apache.commons.codec.binary.Base64;
 
 public class BasicAuthenticator {
     private Request request;
-    private Response response;
+    private ResponseBuilder builder;
     private String decodedAuthHeader;
 
-
-    public BasicAuthenticator(Response response) {
-        this.response = response;
-        request = response.request;
+    public BasicAuthenticator(Request request) throws Exception {
+        this.request = request;
+        builder = new ResponseBuilder(request);
     }
 
-    public Response authenticate() throws IOException {
+    public ResponseBuilder authenticate() throws Exception {
         try {
             decodeAuthHeader();
             checkDecodedAuthHeader();
         } catch(NullPointerException ex) {
-            set401Response();
+            builder.buildAuthenticationRequiredResponse();
         }
-        return response;
+        return builder;
     }
 
     private void decodeAuthHeader() throws UnsupportedEncodingException {
@@ -32,18 +30,11 @@ public class BasicAuthenticator {
         } catch(ArrayIndexOutOfBoundsException ex) { }
     }
 
-    private void checkDecodedAuthHeader() {
+    private void checkDecodedAuthHeader() throws Exception {
         if(decodedAuthHeader.equals("admin:hunter2")) {
-            response.statusCode = "200";
-            response.body = "GET /log HTTP/1.1\nPUT /these HTTP/1.1\nHEAD /requests HTTP/1.1".getBytes();
+            builder.buildAuthenticatedResponse();
         } else {
-            set401Response();
+            builder.buildAuthenticationRequiredResponse();
         }
-    }
-
-    private void set401Response() {
-        response.statusCode = "401";
-        response.setHeader("WWW-Authenticate", "Basic realm=\"JoeServer\"");
-        response.body = "Authentication required".getBytes();
     }
 }

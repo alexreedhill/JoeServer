@@ -1,5 +1,5 @@
 
-public class RedirectHandler {
+public class RedirectHandler implements RequestHandler {
     private ResponseBuilder builder;
 
     public RedirectHandler(Request request) throws Exception {

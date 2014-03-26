@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 public class OptionsHandler implements RequestHandler {
     private ResponseBuilder builder;
 

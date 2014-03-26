@@ -24,6 +24,21 @@ public class FileReader {
         return FileUtils.readFileToByteArray(file);
     }
 
+    public byte[] getDirectoryListing() throws Exception {
+        StringBuilder builder = new StringBuilder();
+        File directory = new File("./public/");
+        File[] fileList = directory.listFiles();
+        for(int i = 0; i < fileList.length; i++) {
+            if(fileList[i].isFile()) {
+                builder.append(fileList[i].getName());
+                if((i + 1) != fileList.length) {
+                    builder.append("\n");
+                }
+            }
+        }
+        return builder.toString().getBytes();
+    }
+
     public String getMimeType(String path) throws IOException {
         try {
             String extension = path.split("\\.")[1];

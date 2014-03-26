@@ -1,8 +1,5 @@
 import java.util.Map;
 
-/**
- * Created by alexhill on 3/25/14.
- */
 public class RequestBuilder {
     private String rawRequest;
     private String rawParams;
@@ -49,7 +46,7 @@ public class RequestBuilder {
 
     private void parseParams() {
         ParameterDecoder decoder = new ParameterDecoder(rawParams);
-        request.params = decoder.decode();
+        request.paramsHash = decoder.decode();
     }
 
     private void splitPathFromParams(String fullUrl) {
@@ -60,10 +57,10 @@ public class RequestBuilder {
 
     public void buildParamsString() {
         StringBuilder builder = new StringBuilder();
-        for(Map.Entry entry : request.params.entrySet()) {
+        for(Map.Entry entry : request.paramsHash.entrySet()) {
             builder = buildParamsString(builder, entry);
         }
-        request.paramsString = builder.toString();
+        request.params = builder.toString();
     }
 
     private StringBuilder buildParamsString(StringBuilder builder, Map.Entry entry) {

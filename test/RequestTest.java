@@ -36,7 +36,7 @@ public class RequestTest{
     @Test
     public void returnsStringRepresentationOfParams() throws Exception {
         request = builder.build("GET /path/to/file.html?Foo=Bar&Baz=Snazz HTTP/1.0");
-        assertEquals("Foo = Bar\nBaz = Snazz\n", request.paramsString);
+        assertEquals("Foo = Bar\nBaz = Snazz\n", request.params);
     }
 
     @Test
@@ -49,6 +49,6 @@ public class RequestTest{
     public void splitsPathFromParams() throws Exception {
         request = builder.build("GET /parameters?foo=bar HTTP/1.1\r\nAuthorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
         assertEquals("/parameters", request.path);
-        assertEquals("bar", request.params.get("foo") );
+        assertEquals("bar", request.paramsHash.get("foo") );
     }
 }

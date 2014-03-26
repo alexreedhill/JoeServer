@@ -31,13 +31,9 @@ public class ResponseBuilder {
         response.statusCode = "200";
     }
 
-    public void buildAuthenticatedResponse() throws IOException {
-        BasicAuthenticator auth = new BasicAuthenticator(response);
-        response = auth.authenticate();
-    }
-
-    public void buildParameterResponse() {
+    public void buildParameterResponse() throws Exception {
         response.statusCode = "200";
+        buildContentTypeHeader();
         response.body = request.convertParamsToBytes();
     }
 
@@ -50,6 +46,7 @@ public class ResponseBuilder {
         try {
             openResource();
             String rangeHeader;
+            buildContentTypeHeader();
             if((rangeHeader = request.headers.get("Range")) != null ) {
                 buildPartialContentResponse(rangeHeader);
             } else {
@@ -84,7 +81,26 @@ public class ResponseBuilder {
         response.statusCode = "405";
     }
 
+    public void buildDirectoryResponse() throws Exception {
+        response.statusCode = "200";
+        buildContentTypeHeader();
+        response.body = fileReader.getDirectoryListing();
+    }
 
+    public Response buildAuthenticatedResponse() throws IOException {
+        System.out.println("Should be building authenticated response");
+        response.statusCode = "200";
+        buildContentTypeHeader();
+        response.body = "GET /log HTTP/1.1\nPUT /these HTTP/1.1\nHEAD /requests HTTP/1.1".getBytes();
+        return response;
+    }
+
+    public Response buildAuthenticationRequiredResponse() {
+        response.statusCode = "401";
+        response.setHeader("WWW-Authenticate", "Basic realm=\"JoeServer\"");
+        response.body = "Authentication required".getBytes();
+        return response;
+    }
 
     private void buildStatusLine() {
         statusLine = request.httpVersion + " " + response.statusCode + " " + getStatusMessage() + "\r\n";
@@ -106,7 +122,6 @@ public class ResponseBuilder {
     }
 
     private void buildHeaders() throws Exception {
-        buildContentTypeHeader();
         int i = 1;
         for(Map.Entry entry : response.headers.entrySet()) {
             buildHeader(entry, i);
@@ -115,10 +130,8 @@ public class ResponseBuilder {
     }
 
     private void buildContentTypeHeader() throws IOException {
-        if(response.statusCode.equals("206") || request.method.equals("GET") && response.statusCode.equals("200")) {
-            String mimeType = fileReader.getMimeType(request.path);
-            response.headers.put("Content-Type", mimeType);
-        }
+        String mimeType = fileReader.getMimeType(request.path);
+        response.headers.put("Content-Type", mimeType);
     }
 
     private void buildHeader(Map.Entry entry, int i) {

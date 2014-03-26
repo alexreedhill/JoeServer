@@ -29,4 +29,11 @@ public class FileReaderTest {
         String mimeType = fileReader.getMimeType("image.png");
         assertEquals("image/png", mimeType);
     }
+
+    @Test
+    public void createsDirectoryListing() throws Exception {
+        byte[] directoryListingBytes = fileReader.getDirectoryListing();
+        String directoryListing = new String(directoryListingBytes, "UTF-8");
+        assertEquals("file1\nfile2\nimage.gif\nimage.jpeg\nimage.png\npartial_content.txt\ntext-file.txt", directoryListing);
+    }
 }

@@ -24,26 +24,10 @@ public class FileReader {
         return FileUtils.readFileToByteArray(file);
     }
 
-    public byte[] getDirectoryLinks() throws Exception {
+    public File[] getDirectoryLinks() throws Exception {
         StringBuilder builder = new StringBuilder();
         File directory = new File("./public/");
-        File[] fileList = directory.listFiles();
-        for(int i = 0; i < fileList.length; i++) {
-            if(fileList[i].isFile()) {
-                builder = buildDirectoryLink(fileList[i], builder);
-            }
-        }
-        return builder.toString().getBytes();
-    }
-
-    public StringBuilder buildDirectoryLink(File file, StringBuilder builder) {
-        String filename = file.getName();
-        builder.append("<a href=\"/");
-        builder.append(filename);
-        builder.append("\">");
-        builder.append(filename);
-        builder.append("</a>\n");
-        return builder;
+        return directory.listFiles();
     }
 
     public String getMimeType(String path) throws IOException {

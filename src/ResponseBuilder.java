@@ -10,10 +10,12 @@ public class ResponseBuilder {
     private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
     private String headerLines = "";
     private FileReader fileReader = new FileReader();
+    private PageGenerator generator;
 
     public ResponseBuilder(Request request) throws Exception {
         response = new Response(request);
         this.request = response.request;
+        generator = new DirectoryPageGenerator(fileReader);
     }
 
     public Response buildFullResponse() throws Exception {
@@ -84,7 +86,7 @@ public class ResponseBuilder {
     public void buildDirectoryResponse() throws Exception {
         response.statusCode = "200";
         response.headers.put("Content-Type", "text/html");
-        response.body = fileReader.getDirectoryLinks();
+        response.body = generator.generate();
     }
 
     public Response buildAuthenticatedResponse() throws IOException {

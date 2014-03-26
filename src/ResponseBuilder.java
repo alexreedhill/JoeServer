@@ -117,6 +117,11 @@ public class ResponseBuilder {
         return Collections.unmodifiableMap(messages);
     }
 
+    private void buildContentTypeHeader() throws IOException {
+        String mimeType = fileReader.getMimeType(request.path);
+        response.headers.put("Content-Type", mimeType);
+    }
+
     private String getStatusMessage() {
         return STATUS_MESSAGES.get(response.statusCode);
     }
@@ -127,11 +132,6 @@ public class ResponseBuilder {
             buildHeader(entry, i);
             i++;
         }
-    }
-
-    private void buildContentTypeHeader() throws IOException {
-        String mimeType = fileReader.getMimeType(request.path);
-        response.headers.put("Content-Type", mimeType);
     }
 
     private void buildHeader(Map.Entry entry, int i) {

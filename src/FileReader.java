@@ -28,17 +28,22 @@ public class FileReader {
         StringBuilder builder = new StringBuilder();
         File directory = new File("./public/");
         File[] fileList = directory.listFiles();
-        builder.append("<!DOCTYPE html>\n<html>\n<body>\n");
         for(int i = 0; i < fileList.length; i++) {
             if(fileList[i].isFile()) {
-                builder.append("<a href=\"/");
-                builder.append(fileList[i].getName());
-                builder.append("\"></a>");
-                builder.append("\n");
+                builder = buildDirectoryLink(fileList[i], builder);
             }
         }
-        builder.append("</body>\n</html>");
         return builder.toString().getBytes();
+    }
+
+    public StringBuilder buildDirectoryLink(File file, StringBuilder builder) {
+        String filename = file.getName();
+        builder.append("<a href=\"/");
+        builder.append(filename);
+        builder.append("\">");
+        builder.append(filename);
+        builder.append("</a>\n");
+        return builder;
     }
 
     public String getMimeType(String path) throws IOException {

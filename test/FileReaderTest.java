@@ -1,5 +1,7 @@
 import org.junit.Test;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import static junit.framework.Assert.assertEquals;
 
 public class FileReaderTest {
@@ -31,9 +33,17 @@ public class FileReaderTest {
     }
 
     @Test
-    public void createsDirectoryListing() throws Exception {
-        byte[] directoryListingBytes = fileReader.getDirectoryListing();
-        String directoryListing = new String(directoryListingBytes, "UTF-8");
-        assertEquals("file1\nfile2\nimage.gif\nimage.jpeg\nimage.png\npartial_content.txt\ntext-file.txt", directoryListing);
+    public void createsDirectoryLinks() throws Exception {
+        byte[] directoryLinksBytes = fileReader.getDirectoryLinks();
+        String directoryLinks = new String(directoryLinksBytes, "UTF-8");
+        assertEquals("<!DOCTYPE html>\n<html>\n<body>\n" +
+                     "<a href=\"/file1\"></a>\n" +
+                     "<a href=\"/file2\"></a>\n" +
+                     "<a href=\"/image.gif\"></a>\n" +
+                     "<a href=\"/image.jpeg\"></a>\n" +
+                     "<a href=\"/image.png\"></a>\n" +
+                     "<a href=\"/partial_content.txt\"></a>\n" +
+                     "<a href=\"/text-file.txt\"></a>\n" +
+                     "</body>\n</html>", directoryLinks);
     }
 }

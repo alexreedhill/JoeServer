@@ -43,11 +43,14 @@ public class Server {
     }
 
     private String parseFullRawRequest() throws IOException {
+        String fullRawRequest = "";
         String rawRequestLine = in.readLine();
-        String fullRawRequest = rawRequestLine + "\r\n";
-        while(!requestHeaderComplete(rawRequestLine)) {
-            rawRequestLine = in.readLine();
-            fullRawRequest += rawRequestLine + "\n";
+        if(validRequest(rawRequestLine)) {
+            fullRawRequest = rawRequestLine + "\r\n";
+            while(!requestHeaderComplete(rawRequestLine)) {
+                rawRequestLine = in.readLine();
+                fullRawRequest += rawRequestLine + "\n";
+            }
         }
         return fullRawRequest;
     }

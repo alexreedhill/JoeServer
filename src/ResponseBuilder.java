@@ -83,8 +83,8 @@ public class ResponseBuilder {
 
     public void buildDirectoryResponse() throws Exception {
         response.statusCode = "200";
-        buildContentTypeHeader();
-        response.body = fileReader.getDirectoryListing();
+        response.headers.put("Content-Type", "text/html");
+        response.body = fileReader.getDirectoryLinks();
     }
 
     public Response buildAuthenticatedResponse() throws IOException {

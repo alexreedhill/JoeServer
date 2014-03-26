@@ -24,18 +24,20 @@ public class FileReader {
         return FileUtils.readFileToByteArray(file);
     }
 
-    public byte[] getDirectoryListing() throws Exception {
+    public byte[] getDirectoryLinks() throws Exception {
         StringBuilder builder = new StringBuilder();
         File directory = new File("./public/");
         File[] fileList = directory.listFiles();
+        builder.append("<!DOCTYPE html>\n<html>\n<body>\n");
         for(int i = 0; i < fileList.length; i++) {
             if(fileList[i].isFile()) {
+                builder.append("<a href=\"/");
                 builder.append(fileList[i].getName());
-                if((i + 1) != fileList.length) {
-                    builder.append("\n");
-                }
+                builder.append("\"></a>");
+                builder.append("\n");
             }
         }
+        builder.append("</body>\n</html>");
         return builder.toString().getBytes();
     }
 

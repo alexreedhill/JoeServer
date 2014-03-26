@@ -27,7 +27,7 @@ public class BasicAuthenticator {
             String encodedString = authHeader.split(" ")[1];
             byte[] bytes = Base64.decodeBase64(encodedString);
             decodedAuthHeader = new String(bytes, "UTF-8");
-        } catch(ArrayIndexOutOfBoundsException ex) { }
+        } catch(ArrayIndexOutOfBoundsException ex) {}
     }
 
     private void checkDecodedAuthHeader() throws Exception {

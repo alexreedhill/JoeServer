@@ -10,7 +10,7 @@ public class GetHandler implements RequestHandler {
     }
 
     public Response handle() throws Exception {
-        if(request.path.equals("/") || request.path.equals("/form")) {
+        if(request.path.equals("/")) {
             builder.buildDirectoryResponse();
         } else if(restrictedRoute()) {
             builder = auth.authenticate();

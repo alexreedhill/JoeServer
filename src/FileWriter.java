@@ -1,3 +1,5 @@
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,6 +20,8 @@ public class FileWriter {
         if (file.createNewFile()) {
             builder.buildOKResponse();
             System.out.println("File created: " + fullPath);
+        } else if(FileUtils.readFileToString(file).equals("")) {
+            builder.buildOKResponse();
         } else {
             builder.buildConflictResponse();
             System.out.println("Failed to create file: " + fullPath);
@@ -28,7 +32,8 @@ public class FileWriter {
 
     public ResponseBuilder write() throws IOException {
         PrintWriter writer = new PrintWriter(file);
-        writer.write(request.body);
+        String[] fileContents = request.body.split("=");
+        writer.write(fileContents[0] + " = " + fileContents[1]);
         writer.close();
         return builder;
     }

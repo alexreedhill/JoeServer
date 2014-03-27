@@ -10,9 +10,9 @@ public class DirectoryPageGenerator implements PageGenerator {
 
     public byte[] generate() throws Exception {
         File[] fileList = fileReader.getDirectoryLinks();
-        for(int i = 0; i < fileList.length; i++) {
-            if(fileList[i].isFile()) {
-                builder = buildDirectoryLink(fileList[i]);
+        for (File file : fileList) {
+            if (file.isFile()) {
+                builder = buildDirectoryLink(file);
             }
         }
         return builder.toString().getBytes();

@@ -32,19 +32,19 @@ public class ParameterDecoder {
     }
 
     private void decodeString() {
-        for(Map.Entry entry : paramsHash.entrySet()) {
-            String value = (String)entry.getValue();
+        for(Map.Entry<String, String> entry : paramsHash.entrySet()) {
+            String value = entry.getValue();
             for (int i = 0; i < value.length(); i++) {
                 char c = value.charAt(i);
                 if(c == '%') {
                     decodeSubString(i, entry, value);
-                    value = (String)entry.getValue();
+                    value = entry.getValue();
                 }
             }
         }
     }
 
-    private void decodeSubString(int i, Map.Entry entry, String value) {
+    private void decodeSubString(int i, Map.Entry<String, String> entry, String value) {
         StringBuilder decodedStringBuilder = new StringBuilder(value);
         String encodedSubString = value.substring(i, i + 3);
         String decodedSubString = CONVERSIONS.get(encodedSubString).toString();

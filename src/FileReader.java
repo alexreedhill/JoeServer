@@ -25,7 +25,6 @@ public class FileReader {
     }
 
     public File[] getDirectoryLinks() throws Exception {
-        StringBuilder builder = new StringBuilder();
         File directory = new File("./public/");
         return directory.listFiles();
     }

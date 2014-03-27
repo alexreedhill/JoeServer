@@ -30,6 +30,27 @@ public class ResponseBuilder {
         return response;
     }
 
+    private void buildStatusLine() {
+        statusLine = request.httpVersion + " " + response.statusCode + " " + getStatusMessage() + "\r\n";
+    }
+
+    private String getStatusMessage() {
+        return STATUS_MESSAGES.get(response.statusCode);
+    }
+
+    private void buildHeaders() throws Exception {
+        int i = 1;
+        for(Map.Entry entry : response.headers.entrySet()) {
+            buildHeader(entry, i);
+            i++;
+        }
+    }
+
+    private void buildHeader(Map.Entry entry, int i) {
+        headerLines += entry.getKey() + ": " + entry.getValue();
+        headerLines += i < response.headers.size() ? "\n" : "\r\n\n";
+    }
+
     public void buildOKResponse() {
         response.statusCode = "200";
     }
@@ -38,6 +59,11 @@ public class ResponseBuilder {
         response.statusCode = "200";
         buildContentTypeHeader();
         response.body = request.convertParamsToBytes();
+    }
+
+    private void buildContentTypeHeader() throws IOException {
+        String mimeType = fileReader.getMimeType(request.path);
+        response.headers.put("Content-Type", mimeType);
     }
 
     public void buildOptionsResponse() {
@@ -105,8 +131,9 @@ public class ResponseBuilder {
         return response;
     }
 
-    private void buildStatusLine() {
-        statusLine = request.httpVersion + " " + response.statusCode + " " + getStatusMessage() + "\r\n";
+    public Response buildConflictResponse() {
+        response.statusCode = "409";
+        return response;
     }
 
     private static Map<String, String> createStatusMessages() {
@@ -117,28 +144,7 @@ public class ResponseBuilder {
         messages.put("307", "Moved Temporarily");
         messages.put("401", "Unauthorized");
         messages.put("405", "Method Not Allowed");
+        messages.put("409", "Conflict");
         return Collections.unmodifiableMap(messages);
-    }
-
-    private void buildContentTypeHeader() throws IOException {
-        String mimeType = fileReader.getMimeType(request.path);
-        response.headers.put("Content-Type", mimeType);
-    }
-
-    private String getStatusMessage() {
-        return STATUS_MESSAGES.get(response.statusCode);
-    }
-
-    private void buildHeaders() throws Exception {
-        int i = 1;
-        for(Map.Entry entry : response.headers.entrySet()) {
-            buildHeader(entry, i);
-            i++;
-        }
-    }
-
-    private void buildHeader(Map.Entry entry, int i) {
-        headerLines += entry.getKey() + ": " + entry.getValue();
-        headerLines += i < response.headers.size() ? "\n" : "\r\n\n";
     }
 }

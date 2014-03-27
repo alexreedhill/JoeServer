@@ -16,18 +16,25 @@ public class RequestBuilder {
         this.request = new Request();
         this.rawRequest = rawRequest;
         request.publicPath = publicPath;
+        System.out.println("Request instantiated: " + rawRequest);
     }
 
     public Request build() {
-        parseFirstLine();
+        String[] splitRawRequest = rawRequest.split("\r\n");
+        parseFirstLine(splitRawRequest);
         parseHeaders();
         parseParams();
         buildParamsString();
+        try {
+            String[] headersAndBody = splitRawRequest[1].split("\n");
+            request.body = headersAndBody[headersAndBody.length -1];
+        } catch(ArrayIndexOutOfBoundsException ex) {
+            request.body = "";
+        }
         return request;
     }
 
-    private void parseFirstLine() {
-        String[] splitRawRequest = rawRequest.split("\r\n");
+    private void parseFirstLine(String[] splitRawRequest) {
         String statusLine = splitRawRequest[0];
         String[] splitStatusLine = statusLine.split(" ");
         try {

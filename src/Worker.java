@@ -9,6 +9,8 @@ public class Worker implements Runnable {
     private Dispatcher dispatcher = new Dispatcher();
     private ArrayList invalidRequests;
     private String publicPath;
+    private int bodyContentLength = 0;
+    private char[] requestBodyBuffer = new char[0];
 
     public Worker(Socket clientSocket, ArrayList invalidRequests, String publicPath) {
         this.clientSocket = clientSocket;
@@ -42,7 +44,13 @@ public class Worker implements Runnable {
             while(!requestHeaderComplete(rawRequestLine)) {
                 rawRequestLine = in.readLine();
                 fullRawRequest += rawRequestLine + "\n";
+                if(rawRequestLine.contains("Content-Length")) {
+                    bodyContentLength = Integer.parseInt(rawRequestLine.split(": ")[1]);
+                    requestBodyBuffer = new char[bodyContentLength];
+                }
             }
+            in.read(requestBodyBuffer, 0, bodyContentLength);
+            fullRawRequest += new String(requestBodyBuffer);
         }
         return fullRawRequest;
     }
@@ -68,4 +76,3 @@ public class Worker implements Runnable {
         return rawRequestLine == null || rawRequestLine.equals("") || rawRequestLine.contains("\r\n");
     }
 }
-

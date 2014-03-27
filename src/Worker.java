@@ -7,10 +7,13 @@ public class Worker implements Runnable {
     private OutputStream clientOutputStream;
     private BufferedReader in;
     private Dispatcher dispatcher = new Dispatcher();
-    private ArrayList invalidRequests = createInvalidRequests();
+    private ArrayList invalidRequests;
+    private String publicPath;
 
-    public Worker(Socket clientSocket) {
+    public Worker(Socket clientSocket, ArrayList invalidRequests, String publicPath) {
         this.clientSocket = clientSocket;
+        this.invalidRequests = invalidRequests;
+        this.publicPath = publicPath;
     }
 
     public void run() {
@@ -21,7 +24,7 @@ public class Worker implements Runnable {
             in = new BufferedReader(new InputStreamReader(clientInputStream));
             String fullRawRequest = parseFullRawRequest();
             if (validRequest(fullRawRequest) ) {
-                Request request = new RequestBuilder().build(fullRawRequest);
+                Request request = new RequestBuilder(fullRawRequest, publicPath).build();
                 serveResponse(createResponse(request));
             }
             clientSocket.close();
@@ -44,6 +47,10 @@ public class Worker implements Runnable {
         return fullRawRequest;
     }
 
+    private boolean validRequest(String fullRawRequest) throws IOException {
+        return !invalidRequests.contains(fullRawRequest);
+    }
+
     private byte[] createResponse(Request request) throws Exception {
         Response response = dispatcher.dispatch(request);
         System.out.println("Full response: " + new String(response.fullResponse, "UTF-8"));
@@ -57,19 +64,8 @@ public class Worker implements Runnable {
         writer.close();
     }
 
-    private boolean validRequest(String fullRawRequest) throws IOException {
-        return !invalidRequests.contains(fullRawRequest);
-    }
-
     private boolean requestHeaderComplete(String rawRequestLine) throws IOException {
         return rawRequestLine == null || rawRequestLine.equals("") || rawRequestLine.contains("\r\n");
-    }
-
-    private ArrayList createInvalidRequests() {
-        return new ArrayList<String>() {{
-            add("");
-            add(null);
-        }};
     }
 }
 

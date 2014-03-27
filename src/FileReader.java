@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 
 public class FileReader {
+    private Request request;
+    private String publicPath;
     private static final Map<String, String> MIME_TYPES = createMimeTypes();
 
     private static Map<String, String> createMimeTypes() {
@@ -19,13 +21,27 @@ public class FileReader {
         return Collections.unmodifiableMap(mimeTypes);
     }
 
+    public FileReader(Request request) {
+        this.request = request;
+        this.publicPath = request.publicPath;
+    }
+
+    public FileReader() {
+        publicPath = "../cob_spec/public/";
+    }
+
+    public byte[] read() throws IOException {
+        File file = new File(publicPath + request.path);
+        return FileUtils.readFileToByteArray(file);
+    }
+
     public byte[] read(String path) throws IOException {
-        File file = new File("./public/" + path);
+        File file = new File(publicPath + path);
         return FileUtils.readFileToByteArray(file);
     }
 
     public File[] getDirectoryLinks() throws Exception {
-        File directory = new File("./public/");
+        File directory = new File(publicPath);
         return directory.listFiles();
     }
 

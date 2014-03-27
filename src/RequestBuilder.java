@@ -5,13 +5,20 @@ public class RequestBuilder {
     private String rawParams;
     private Request request;
 
-    public RequestBuilder() {
+    public RequestBuilder(String rawRequest) {
         this.request = new Request();
+        this.rawRequest = rawRequest;
+        request.publicPath = "../cob_spec/public";
+        System.out.println("Request instantiated: " + rawRequest);
     }
 
-    public Request build(String rawRequest) throws Exception {
+    public RequestBuilder(String rawRequest, String publicPath) {
+        this.request = new Request();
         this.rawRequest = rawRequest;
-        System.out.println("Request instantiated: " + rawRequest);
+        request.publicPath = publicPath;
+    }
+
+    public Request build() {
         parseFirstLine();
         parseHeaders();
         parseParams();

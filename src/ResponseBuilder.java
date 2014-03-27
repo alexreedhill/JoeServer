@@ -9,12 +9,13 @@ public class ResponseBuilder {
     private String statusLine;
     private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
     private String headerLines = "";
-    private FileReader fileReader = new FileReader();
+    private FileReader fileReader;
     private PageGenerator generator;
 
     public ResponseBuilder(Request request) throws Exception {
         response = new Response(request);
         this.request = response.request;
+        this.fileReader = new FileReader(request);
         generator = new DirectoryPageGenerator(fileReader);
     }
 
@@ -60,7 +61,7 @@ public class ResponseBuilder {
     }
 
     private void openResource() throws IOException {
-        response.body = fileReader.read(request.path);
+        response.body = fileReader.read();
     }
 
     private void buildPartialContentResponse(String rangeHeader) throws Exception {
@@ -68,6 +69,7 @@ public class ResponseBuilder {
         String[] splitRangeHeader = rangeHeader.split("-");
         int start = Integer.parseInt(splitRangeHeader[0].replace("bytes=", ""));
         int length = Integer.parseInt(splitRangeHeader[1]);
+        response.setHeader("Content-Length", splitRangeHeader[1]);
         response.setHeader("Content-Range", "bytes " + start + "-" + length + "/" + response.body.length);
         byte[] partialContent = new byte[length];
         System.arraycopy(response.body, start, partialContent, 0, length);
@@ -90,7 +92,6 @@ public class ResponseBuilder {
     }
 
     public Response buildAuthenticatedResponse() throws IOException {
-        System.out.println("Should be building authenticated response");
         response.statusCode = "200";
         buildContentTypeHeader();
         response.body = "GET /log HTTP/1.1\nPUT /these HTTP/1.1\nHEAD /requests HTTP/1.1".getBytes();

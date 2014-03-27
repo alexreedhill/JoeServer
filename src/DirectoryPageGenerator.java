@@ -11,7 +11,7 @@ public class DirectoryPageGenerator implements PageGenerator {
     public byte[] generate() throws Exception {
         File[] fileList = fileReader.getDirectoryLinks();
         for (File file : fileList) {
-            if (file.isFile()) {
+            if (file.isFile() && file.getName().charAt(0) != '.') {
                 builder = buildDirectoryLink(file);
             }
         }
@@ -24,7 +24,7 @@ public class DirectoryPageGenerator implements PageGenerator {
         builder.append(filename);
         builder.append("\">");
         builder.append(filename);
-        builder.append("</a>\n");
+        builder.append("</a><br>\n");
         return builder;
     }
 }

@@ -8,14 +8,10 @@ public class BasicAuthenticatorTest {
     private GetHandler handler;
     private RequestBuilder builder;
 
-    @Before
-    public void setupBuilder() {
-        builder  = new RequestBuilder();
-    }
-
     @Test
     public void addsCorrectStatusAndHeadersToResponseOnUnauthenticatedRequest() throws Exception {
-        Request request = builder.build("GET /logs HTTP/1.1");
+        builder  = new RequestBuilder("GET /logs HTTP/1.1");
+        Request request = builder.build();
         handler = new GetHandler(request);
         response = handler.handle();
         String stringResponse = response.convertToString();
@@ -25,7 +21,8 @@ public class BasicAuthenticatorTest {
     @Test public void addsCorrectStatusAndHeadersToResponseOnAuthenticatedRequest() throws Exception {
         byte[] bytes = "admin:hunter2".getBytes();
         String encodedAuthorizationString = Base64.encodeBase64String(bytes);
-        Request request = builder.build("GET /logs HTTP/1.1\r\nAuthorization: Basic " + encodedAuthorizationString);
+        builder = new RequestBuilder("GET /logs HTTP/1.1\r\nAuthorization: Basic " + encodedAuthorizationString);
+        Request request = builder.build();
         handler = new GetHandler(request);
         response = handler.handle();
         String stringResponse = response.convertToString();

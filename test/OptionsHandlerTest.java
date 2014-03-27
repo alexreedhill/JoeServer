@@ -7,8 +7,9 @@ public class OptionsHandlerTest {
 
     @Before
     public void setUpRequest() throws Exception {
-        RequestBuilder builder = new RequestBuilder();
-        Request request = builder.build("OPTIONS /method_options HTTP/1.0");
+        String publicPath = "../cob_spec/public/";
+        RequestBuilder builder = new RequestBuilder("OPTIONS /method_options HTTP/1.0", publicPath);
+        Request request = builder.build();
         optionsHandler = new OptionsHandler(request);
     }
 

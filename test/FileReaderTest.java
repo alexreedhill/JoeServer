@@ -11,14 +11,14 @@ public class FileReaderTest {
 
     @Test
     public void readsPlainTextFileIntoByteArray() throws IOException {
-        byte[] bytes = fileReader.read("/file1");
+        byte[] bytes = fileReader.read("file1");
         String contents = new String(bytes, "UTF-8");
         assertEquals("file1 contents", contents);
     }
 
     @Test
     public void getsMimeTypeForJpegImage() throws IOException {
-        String mimeType = fileReader.getMimeType("/image.jpeg");
+        String mimeType = fileReader.getMimeType("image.jpeg");
         assertEquals("image/jpeg", mimeType);
     }
 

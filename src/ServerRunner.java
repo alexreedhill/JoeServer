@@ -1,11 +1,11 @@
-
 public class ServerRunner {
 
     public static void main(String[] args)  {
         try {
-            Server server = new Server(5000);
+            int port = Integer.parseInt(args[0]);
+            String publicPath = args[1];
+            Server server = new Server(port, publicPath);
             new Thread(server).start();
-
             try {
                 Thread.sleep(10 * 10000000);
             } catch (InterruptedException e) {

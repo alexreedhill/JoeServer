@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Worker implements Runnable {
     private Socket clientSocket;
@@ -15,21 +16,33 @@ public class Worker implements Runnable {
         this.publicPath = publicPath;
     }
 
-    public void run() {
+    public void run()  {
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        System.out.println("Thread count: " + threadSet.size());
+        if(threadSet.size() < 20) {
+            try {
+                Thread.sleep(100);
+            } catch(InterruptedException ex) {
+                System.err.println(ex);
+            }
+        }
         try {
             clientOutputStream = clientSocket.getOutputStream();
             InputStream clientInputStream = clientSocket.getInputStream();
-            long time = System.currentTimeMillis();
             in = new BufferedReader(new InputStreamReader(clientInputStream));
             String httpRequest = parseHttpRequest();
             if (validRequest(httpRequest) ) {
                 Request request = new RequestBuilder(httpRequest, publicPath).build();
                 serveResponse(createResponse(request));
             }
-            clientSocket.close();
-            System.out.println("Request processed: " + time);
         } catch (Exception ex) {
             System.err.println(ex);
+        } finally {
+            try {
+                clientSocket.close();
+            } catch(IOException ex) {
+                System.out.println("Client socket could not be closed");
+            }
         }
     }
 

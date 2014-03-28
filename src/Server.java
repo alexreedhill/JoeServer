@@ -1,35 +1,38 @@
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
-public class Server implements Runnable {
+public class Server extends Thread {
     private ServerSocket serverSocket;
     private String publicPath;
     protected boolean isStopped = false;
+    private ExecutorService executor;
+    private Socket clientSocket;
 
     public Server(int port, String publicPath) throws IOException {
         serverSocket = new ServerSocket(port);
         this.publicPath = publicPath;
+        this.executor = Executors.newFixedThreadPool(8);
     }
 
     public void run() {
         try {
             while(!isStopped) {
-                Socket clientSocket = serverSocket.accept();
-                new Thread(new Worker(clientSocket, publicPath)).start();
+                listen();
             }
         } catch(Exception ex) {
             System.err.println(ex);
         }
     }
 
-    public synchronized void stop(){
-        isStopped = true;
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Error closing server", e);
+    private void listen() throws IOException {
+        clientSocket = serverSocket.accept();
+        if (clientSocket != null) {
+            executor.execute(new Worker(clientSocket, publicPath));
         }
+        clientSocket = null;
     }
 
 }

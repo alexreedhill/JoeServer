@@ -19,11 +19,8 @@ public class FileWriter {
         if (file.createNewFile()) {
             builder.buildOKResponse();
             System.out.println("File created: " + fullPath);
-        } else if(FileUtils.readFileToString(file).equals("")) {
-            builder.buildOKResponse();
         } else {
-            builder.buildConflictResponse();
-            System.out.println("Failed to create file: " + fullPath);
+            builder.buildOKResponse();
         }
         write();
         return builder;

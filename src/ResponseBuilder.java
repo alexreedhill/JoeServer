@@ -141,11 +141,6 @@ public class ResponseBuilder {
         return response;
     }
 
-    public Response buildConflictResponse() {
-        response.statusCode = "409";
-        return response;
-    }
-
     private static Map<String, String> createStatusMessages() {
         Map<String, String> messages = new HashMap<String, String>();
         messages.put("200", "OK");
@@ -154,7 +149,6 @@ public class ResponseBuilder {
         messages.put("307", "Moved Temporarily");
         messages.put("401", "Unauthorized");
         messages.put("405", "Method Not Allowed");
-        messages.put("409", "Conflict");
         return Collections.unmodifiableMap(messages);
     }
 }

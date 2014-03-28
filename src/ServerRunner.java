@@ -12,7 +12,6 @@ public class ServerRunner {
                 e.printStackTrace();
             }
             System.out.println("Stopping Server");
-            server.stop();
         } catch(Exception ex) {
             System.err.println(ex);
         }

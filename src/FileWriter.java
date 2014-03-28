@@ -1,4 +1,3 @@
-import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,13 +14,8 @@ public class FileWriter {
     }
 
     public ResponseBuilder createNewFile() throws IOException {
-        String fullPath = request.publicPath + request.path;
-        if (file.createNewFile()) {
-            builder.buildOKResponse();
-            System.out.println("File created: " + fullPath);
-        } else {
-            builder.buildOKResponse();
-        }
+        file.createNewFile();
+        builder.buildOKResponse();
         write();
         return builder;
     }

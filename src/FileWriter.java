@@ -11,11 +11,11 @@ public class FileWriter {
     public FileWriter(Request request, ResponseBuilder builder) {
         this.request = request;
         this.builder = builder;
+        file = new File("/Users/alexhill/cob_spec/public/form");
     }
 
     public ResponseBuilder createNewFile() throws IOException {
         String fullPath = request.publicPath + request.path;
-        file = new File("/Users/alexhill/cob_spec/public/form");
         if (file.createNewFile()) {
             builder.buildOKResponse();
             System.out.println("File created: " + fullPath);
@@ -25,15 +25,14 @@ public class FileWriter {
             builder.buildConflictResponse();
             System.out.println("Failed to create file: " + fullPath);
         }
-        builder = write();
+        write();
         return builder;
     }
 
-    public ResponseBuilder write() throws IOException {
+    public void write() throws IOException {
         PrintWriter writer = new PrintWriter(file);
         String[] fileContents = request.body.split("=");
         writer.write(fileContents[0] + " = " + fileContents[1]);
         writer.close();
-        return builder;
     }
 }

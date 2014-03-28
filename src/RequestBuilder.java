@@ -23,8 +23,8 @@ public class RequestBuilder {
         String[] splitRawRequest = httpRequest.split("\r\n");
         parseFirstLine(splitRawRequest);
         decodeParams();
+        parseHeaders();
         try {
-            parseHeaders();
             String[] headersAndBody = splitRawRequest[1].split("\n");
             request.body = headersAndBody[headersAndBody.length -1];
         } catch(ArrayIndexOutOfBoundsException ex) {}
@@ -49,12 +49,14 @@ public class RequestBuilder {
     }
 
     private void parseHeaders() throws ArrayIndexOutOfBoundsException {
-        String rawHeaders = httpRequest.split("\r\n")[1];
-        String[] splitHeaders = rawHeaders.split("\n");
-        for (String header : splitHeaders) {
-            String[] splitHeader = header.split(":");
-            request.headers.put(splitHeader[0].trim(), splitHeader[1].trim());
-        }
+        try {
+            String rawHeaders = httpRequest.split("\r\n")[1];
+            String[] splitHeaders = rawHeaders.split("\n");
+            for (String header : splitHeaders) {
+                String[] splitHeader = header.split(":");
+                request.headers.put(splitHeader[0].trim(), splitHeader[1].trim());
+            }
+        } catch(ArrayIndexOutOfBoundsException ex) {}
     }
 
     private void decodeParams() {

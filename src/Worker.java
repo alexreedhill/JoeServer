@@ -6,7 +6,6 @@ public class Worker implements Runnable {
     private Socket clientSocket;
     private OutputStream clientOutputStream;
     private BufferedReader in;
-    private Dispatcher dispatcher = new Dispatcher();
     private String publicPath;
     private int bodyContentLength = 0;
     private char[] requestBodyBuffer = new char[0];
@@ -22,9 +21,9 @@ public class Worker implements Runnable {
             InputStream clientInputStream = clientSocket.getInputStream();
             long time = System.currentTimeMillis();
             in = new BufferedReader(new InputStreamReader(clientInputStream));
-            String fullRawRequest = parseFullRawRequest();
-            if (validRequest(fullRawRequest) ) {
-                Request request = new RequestBuilder(fullRawRequest, publicPath).build();
+            String httpRequest = parseHttpRequest();
+            if (validRequest(httpRequest) ) {
+                Request request = new RequestBuilder(httpRequest, publicPath).build();
                 serveResponse(createResponse(request));
             }
             clientSocket.close();
@@ -34,28 +33,28 @@ public class Worker implements Runnable {
         }
     }
 
-    private String parseFullRawRequest() throws IOException {
-        String fullRawRequest = "";
-        String rawRequestLine = in.readLine();
-        if(validRequest(rawRequestLine)) {
-            fullRawRequest = rawRequestLine + "\r\n";
-            while(!requestHeaderComplete(rawRequestLine)) {
-                rawRequestLine = in.readLine();
-                fullRawRequest += rawRequestLine + "\n";
-                if(rawRequestLine.contains("Content-Length")) {
-                    bodyContentLength = Integer.parseInt(rawRequestLine.split(": ")[1]);
+    private String parseHttpRequest() throws IOException {
+        String httpRequest = "";
+        String httpRequestLine = in.readLine();
+        if(validRequest(httpRequestLine)) {
+            httpRequest = httpRequestLine + "\r\n";
+            while(!requestHeaderComplete(httpRequestLine)) {
+                httpRequestLine = in.readLine();
+                httpRequest += httpRequestLine + "\n";
+                if(httpRequestLine.contains("Content-Length")) {
+                    bodyContentLength = Integer.parseInt(httpRequestLine.split(": ")[1]);
                     requestBodyBuffer = new char[bodyContentLength];
                 }
             }
             in.read(requestBodyBuffer, 0, bodyContentLength);
-            fullRawRequest += new String(requestBodyBuffer);
+            httpRequest += new String(requestBodyBuffer);
         }
-        return fullRawRequest;
+        return httpRequest;
     }
 
-    private boolean validRequest(String fullRawRequest) throws IOException {
+    private boolean validRequest(String httpRequest) throws IOException {
         ArrayList<String> invalidRequests = createInvalidRequests();
-        return !invalidRequests.contains(fullRawRequest);
+        return !invalidRequests.contains(httpRequest);
     }
 
     private ArrayList<String> createInvalidRequests() {
@@ -66,6 +65,7 @@ public class Worker implements Runnable {
     }
 
     private byte[] createResponse(Request request) throws Exception {
+        Dispatcher dispatcher = new Dispatcher();
         Response response = dispatcher.dispatch(request);
         System.out.println("Full response: " + new String(response.fullResponse, "UTF-8"));
         return response.fullResponse;
@@ -78,7 +78,7 @@ public class Worker implements Runnable {
         writer.close();
     }
 
-    private boolean requestHeaderComplete(String rawRequestLine) throws IOException {
-        return rawRequestLine == null || rawRequestLine.equals("") || rawRequestLine.contains("\r\n");
+    private boolean requestHeaderComplete(String httpRequestLine) throws IOException {
+        return httpRequestLine == null || httpRequestLine.equals("") || httpRequestLine.contains("\r\n");
     }
 }

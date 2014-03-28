@@ -10,7 +10,11 @@ public class PutHandler implements RequestHandler {
     }
 
     public Response handle() throws Exception {
-        if(methodNotAllowed()) {
+        if(request.path.equals("/form")) {
+            FileWriter writer = new FileWriter(request, builder);
+            writer.write();
+            builder.buildOKResponse();
+        } else if(methodNotAllowed()) {
             builder.buildMethodNotAllowedResponse();
         } else {
             builder.buildOKResponse();

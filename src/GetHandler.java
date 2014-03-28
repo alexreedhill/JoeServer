@@ -12,6 +12,8 @@ public class GetHandler implements RequestHandler {
     public Response handle() throws Exception {
         if(request.path.equals("/")) {
             builder.buildDirectoryResponse();
+        } else if(request.path.equals("/form")) {
+            builder.buildFileResponse();
         } else if(restrictedRoute()) {
             builder = auth.authenticate();
         } else if(request.path.equals("/parameters")) {

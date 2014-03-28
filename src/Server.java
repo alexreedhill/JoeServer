@@ -9,7 +9,6 @@ public class Server extends Thread {
     private String publicPath;
     protected boolean isStopped = false;
     private ExecutorService executor;
-    private Socket clientSocket;
 
     public Server(int port, String publicPath) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -28,11 +27,10 @@ public class Server extends Thread {
     }
 
     private void listen() throws IOException {
-        clientSocket = serverSocket.accept();
+        Socket clientSocket = serverSocket.accept();
         if (clientSocket != null) {
             executor.execute(new Worker(clientSocket, publicPath));
         }
-        clientSocket = null;
     }
 
 }

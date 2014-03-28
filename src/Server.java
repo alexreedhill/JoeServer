@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 public class Server extends Thread {
     private ServerSocket serverSocket;
     private String publicPath;
-    protected boolean isStopped = false;
     private ExecutorService executor;
 
     public Server(int port, String publicPath) throws IOException {
@@ -18,7 +17,7 @@ public class Server extends Thread {
 
     public void run() {
         try {
-            while(!isStopped) {
+            while(true) {
                 listen();
             }
         } catch(Exception ex) {

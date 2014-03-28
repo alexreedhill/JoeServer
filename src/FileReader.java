@@ -8,7 +8,6 @@ import org.apache.commons.io.FileUtils;
 public class FileReader {
     private Request request;
     private String publicPath;
-    private static final Map<String, String> MIME_TYPES = createMimeTypes();
 
     private static Map<String, String> createMimeTypes() {
         Map<String, String> mimeTypes = new HashMap<String, String>();
@@ -55,6 +54,7 @@ public class FileReader {
     }
 
     private String getMimeTypeFromFileExtension(String extension) {
+        Map<String, String> MIME_TYPES = createMimeTypes();
         String mimeType = MIME_TYPES.get(extension);
         return mimeType == null ? "text/plain" : mimeType;
     }

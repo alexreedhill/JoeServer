@@ -13,7 +13,7 @@ public class PostHandler implements RequestHandler {
     }
 
     public Response handle() throws Exception {
-        if(request.path.equals("/form")){
+        if(request.path.equals("/form")) {
             builder = fileWriter.createNewFile();
         } else if(methodNotAllowed()) {
             builder.buildMethodNotAllowedResponse();

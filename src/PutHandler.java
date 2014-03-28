@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class PutHandler implements RequestHandler {
     private Request request;
     private ResponseBuilder builder;
-    private ArrayList methodNotAllowedUrls = createMethodNotAllowedUrls();
 
     public PutHandler(Request request) throws Exception {
         this.request = request;
@@ -20,6 +19,7 @@ public class PutHandler implements RequestHandler {
     }
 
     private boolean methodNotAllowed() {
+        ArrayList methodNotAllowedUrls = createMethodNotAllowedUrls();
         return methodNotAllowedUrls.contains(request.path);
     }
 

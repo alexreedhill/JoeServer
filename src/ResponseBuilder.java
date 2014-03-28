@@ -6,9 +6,6 @@ import java.util.Map;
 public class ResponseBuilder {
     private Response response;
     private Request request;
-    private String statusLine;
-    private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
-    private String headerLines = "";
     private FileReader fileReader;
     private PageGenerator generator;
 
@@ -20,8 +17,8 @@ public class ResponseBuilder {
     }
 
     public Response buildFullResponse() throws Exception {
-        buildStatusLine();
-        buildHeaders();
+        String statusLine = buildStatusLine();
+        String headerLines = buildHeaders();
         byte[] metadata = (statusLine + headerLines).getBytes();
         byte[] fullResponse = new byte[metadata.length + response.body.length];
         System.arraycopy(metadata, 0, fullResponse, 0, metadata.length);
@@ -30,25 +27,30 @@ public class ResponseBuilder {
         return response;
     }
 
-    private void buildStatusLine() {
-        statusLine = request.httpVersion + " " + response.statusCode + " " + getStatusMessage() + "\r\n";
+    private String buildStatusLine() {
+        return request.httpVersion + " " + response.statusCode + " " + getStatusMessage() + "\r\n";
     }
 
     private String getStatusMessage() {
+        Map<String, String> STATUS_MESSAGES = createStatusMessages();
         return STATUS_MESSAGES.get(response.statusCode);
     }
 
-    private void buildHeaders() throws Exception {
+    private String buildHeaders() throws Exception {
         int i = 1;
+        String headerLines = "";
         for(Map.Entry entry : response.headers.entrySet()) {
-            buildHeader(entry, i);
+            headerLines += buildHeader(entry, i);
             i++;
         }
+        return headerLines;
     }
 
-    private void buildHeader(Map.Entry entry, int i) {
+    private String buildHeader(Map.Entry entry, int i) {
+        String headerLines = "";
         headerLines += entry.getKey() + ": " + entry.getValue();
         headerLines += i < response.headers.size() ? "\n" : "\r\n\n";
+        return headerLines;
     }
 
     public void buildOKResponse() {
@@ -74,8 +76,8 @@ public class ResponseBuilder {
     public void buildFileResponse() throws Exception {
         try {
             openResource();
-            String rangeHeader;
             buildContentTypeHeader();
+            String rangeHeader;
             if((rangeHeader = request.headers.get("Range")) != null ) {
                 buildPartialContentResponse(rangeHeader);
             } else {
@@ -95,8 +97,16 @@ public class ResponseBuilder {
         String[] splitRangeHeader = rangeHeader.split("-");
         int start = Integer.parseInt(splitRangeHeader[0].replace("bytes=", ""));
         int length = Integer.parseInt(splitRangeHeader[1]);
+        setPartialContentHeaders(splitRangeHeader, start, length);
+        setPartialContentBody(start, length);
+    }
+
+    private void setPartialContentHeaders(String[] splitRangeHeader, int start, int length) {
         response.setHeader("Content-Length", splitRangeHeader[1]);
         response.setHeader("Content-Range", "bytes " + start + "-" + length + "/" + response.body.length);
+    }
+
+    private void setPartialContentBody(int start, int length) {
         byte[] partialContent = new byte[length];
         System.arraycopy(response.body, start, partialContent, 0, length);
         response.body = partialContent;

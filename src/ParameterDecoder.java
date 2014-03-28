@@ -2,7 +2,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ParameterDecoder {
-    private static final LinkedHashMap<String, Character> CONVERSIONS = createConversions();
     private String params;
     private LinkedHashMap<String, String> paramsHash = new LinkedHashMap<String, String>();
 
@@ -47,6 +46,7 @@ public class ParameterDecoder {
     private void decodeSubString(int i, Map.Entry<String, String> entry, String value) {
         StringBuilder decodedStringBuilder = new StringBuilder(value);
         String encodedSubString = value.substring(i, i + 3);
+        LinkedHashMap<String, Character> CONVERSIONS = createConversions();
         String decodedSubString = CONVERSIONS.get(encodedSubString).toString();
         decodedStringBuilder.replace(i, i + 3, decodedSubString);
         entry.setValue(decodedStringBuilder.toString());

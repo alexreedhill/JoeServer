@@ -28,7 +28,7 @@ public class ResponseTest {
 
     @Test
     public void returns200OnPostRequest() throws Exception {
-        builder = new RequestBuilder("POST /form HTTP/1.1");
+        builder = new RequestBuilder("POST /foo HTTP/1.1");
         request = builder.build();
         response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();
@@ -38,6 +38,7 @@ public class ResponseTest {
     @Test
     public void setsLocationHeader() throws Exception {
         builder = new RequestBuilder("GET /redirect HTTP/1.1");
+        request = builder.build();
         request = builder.build();
         response = dispatcher.dispatch(request);
         String fullResponse = response.convertToString();

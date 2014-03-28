@@ -1,13 +1,11 @@
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Server implements Runnable {
     private ServerSocket serverSocket;
     private String publicPath;
     protected boolean isStopped = false;
-    private ArrayList invalidRequests = createInvalidRequests();
 
     public Server(int port, String publicPath) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -18,7 +16,7 @@ public class Server implements Runnable {
         try {
             while(!isStopped) {
                 Socket clientSocket = serverSocket.accept();
-                new Thread(new Worker(clientSocket, invalidRequests, publicPath)).start();
+                new Thread(new Worker(clientSocket, publicPath)).start();
             }
         } catch(Exception ex) {
             System.err.println(ex);
@@ -34,10 +32,4 @@ public class Server implements Runnable {
         }
     }
 
-    private ArrayList createInvalidRequests() {
-        return new ArrayList<String>() {{
-            add("");
-            add(null);
-        }};
-    }
 }

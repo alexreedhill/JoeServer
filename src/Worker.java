@@ -7,14 +7,12 @@ public class Worker implements Runnable {
     private OutputStream clientOutputStream;
     private BufferedReader in;
     private Dispatcher dispatcher = new Dispatcher();
-    private ArrayList invalidRequests;
     private String publicPath;
     private int bodyContentLength = 0;
     private char[] requestBodyBuffer = new char[0];
 
-    public Worker(Socket clientSocket, ArrayList invalidRequests, String publicPath) {
+    public Worker(Socket clientSocket, String publicPath) {
         this.clientSocket = clientSocket;
-        this.invalidRequests = invalidRequests;
         this.publicPath = publicPath;
     }
 
@@ -56,7 +54,15 @@ public class Worker implements Runnable {
     }
 
     private boolean validRequest(String fullRawRequest) throws IOException {
+        ArrayList<String> invalidRequests = createInvalidRequests();
         return !invalidRequests.contains(fullRawRequest);
+    }
+
+    private ArrayList<String> createInvalidRequests() {
+        return new ArrayList<String>() {{
+            add("");
+            add(null);
+        }};
     }
 
     private byte[] createResponse(Request request) throws Exception {

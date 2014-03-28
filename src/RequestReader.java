@@ -10,31 +10,40 @@ public class RequestReader {
     private char[] requestBodyBuffer = new char[0];
     private BufferedReader in;
     private InputStream clientInputStream;
+    private RequestValidator validator;
 
-    public RequestReader(Socket clientSocket) throws IOException {
+    public RequestReader(Socket clientSocket, RequestValidator validator) throws IOException {
         clientInputStream = clientSocket.getInputStream();
+        this.validator = validator;
     }
 
     public String readRequest() throws IOException {
         in = new BufferedReader(new InputStreamReader(clientInputStream));
         String httpRequestLine = in.readLine();
-        RequestValidator validator = new RequestValidator();
         if(validator.validate(httpRequestLine)) {
-            httpRequest = httpRequestLine + "\r\n";
-            readUntilEndOfHeaders(httpRequestLine);
-            readBody();
+            readValidRequest(httpRequestLine);
         }
         return httpRequest;
+    }
+
+    private void readValidRequest(String httpRequestLine) throws IOException {
+        httpRequest = httpRequestLine + "\r\n";
+        readUntilEndOfHeaders(httpRequestLine);
+        readBody();
     }
 
     private void readUntilEndOfHeaders(String httpRequestLine) throws IOException {
         while(!requestHeaderComplete(httpRequestLine)) {
             httpRequestLine = in.readLine();
             httpRequest += httpRequestLine + "\n";
-            if(httpRequestLine.contains("Content-Length")) {
-                bodyContentLength = Integer.parseInt(httpRequestLine.split(": ")[1]);
-                requestBodyBuffer = new char[bodyContentLength];
-            }
+            getContentLength(httpRequestLine);
+        }
+    }
+
+    private void getContentLength(String httpRequestLine) {
+        if(httpRequestLine.contains("Content-Length")) {
+            bodyContentLength = Integer.parseInt(httpRequestLine.split(": ")[1]);
+            requestBodyBuffer = new char[bodyContentLength];
         }
     }
 

@@ -48,6 +48,12 @@ public class RequestBuilder {
         }
     }
 
+    private void splitPathFromParams(String fullUrl) {
+        String[] splitURL = fullUrl.split("[?]");
+        request.path = splitURL[0];
+        httpParams = splitURL[1];
+    }
+
     private void parseHeaders() throws ArrayIndexOutOfBoundsException {
         try {
             String rawHeaders = httpRequest.split("\r\n")[1];
@@ -67,12 +73,6 @@ public class RequestBuilder {
             builder = buildParams(builder, entry);
         }
         request.params = builder.toString();
-    }
-
-    private void splitPathFromParams(String fullUrl) {
-        String[] splitURL = fullUrl.split("[?]");
-        request.path = splitURL[0];
-        httpParams = splitURL[1];
     }
 
     private StringBuilder buildParams(StringBuilder builder, Map.Entry entry) {

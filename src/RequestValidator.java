@@ -2,9 +2,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class RequestValidator {
-    private ArrayList<String> invalidRequests = createInvalidRequests();
 
     protected boolean validate(String httpRequest) throws IOException {
+        ArrayList<String> invalidRequests = createInvalidRequests();
         return !invalidRequests.contains(httpRequest);
     }
 

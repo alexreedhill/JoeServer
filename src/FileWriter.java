@@ -8,7 +8,7 @@ public class FileWriter {
 
     public FileWriter(Request request) {
         this.request = request;
-        file = new File("/Users/alexhill/cob_spec/public/form");
+        file = new File(request.publicPath + "/form");
     }
 
     public void write() throws IOException {

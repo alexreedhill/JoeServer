@@ -4,7 +4,6 @@ public class PostHandler implements RequestHandler {
     private Request request;
     private ResponseBuilder builder;
     private FileWriter fileWriter;
-    private ArrayList methodNotAllowedUrls = createMethodNotAllowedUrls();
 
     public PostHandler(Request request) throws Exception {
         this.request = request;
@@ -25,6 +24,7 @@ public class PostHandler implements RequestHandler {
     }
 
     private boolean methodNotAllowed() {
+        ArrayList methodNotAllowedUrls = createMethodNotAllowedUrls();
         return methodNotAllowedUrls.contains(request.path);
     }
 

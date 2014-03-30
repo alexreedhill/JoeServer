@@ -11,7 +11,7 @@ public class ParameterDecoder {
 
     public LinkedHashMap<String, String> decode() {
         splitParamsIntoKeyAndValue();
-        decodeString();
+        decodeEachParameter();
         return paramsHash;
     }
 
@@ -27,18 +27,21 @@ public class ParameterDecoder {
             String[] splitParam = param.split("=", 2);
             paramsHash.put(splitParam[0], splitParam[1]);
         } catch(ArrayIndexOutOfBoundsException ex) {}
-
     }
 
-    private void decodeString() {
+    private void decodeEachParameter() {
         for(Map.Entry<String, String> entry : paramsHash.entrySet()) {
             String value = entry.getValue();
-            for (int i = 0; i < value.length(); i++) {
-                char c = value.charAt(i);
-                if(c == '%') {
-                    decodeSubString(i, entry, value);
-                    value = entry.getValue();
-                }
+            iterateOverEachCharacter(value, entry);
+        }
+    }
+
+    private void iterateOverEachCharacter(String value, Map.Entry<String, String> entry) {
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if(c == '%') {
+                decodeSubString(i, entry, value);
+                value = entry.getValue();
             }
         }
     }

@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.Socket;
 
 public class RequestReader {
     private String httpRequest = "";
@@ -12,8 +11,8 @@ public class RequestReader {
     private InputStream clientInputStream;
     private RequestValidator validator;
 
-    public RequestReader(Socket clientSocket, RequestValidator validator) throws IOException {
-        clientInputStream = clientSocket.getInputStream();
+    public RequestReader(InputStream clientInputStream, RequestValidator validator) throws IOException {
+        this.clientInputStream = clientInputStream;
         this.validator = validator;
     }
 

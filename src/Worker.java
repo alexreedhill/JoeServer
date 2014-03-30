@@ -7,17 +7,19 @@ public class Worker implements Runnable {
     private Socket clientSocket;
     private OutputStream clientOutputStream;
     private String publicPath;
+    private Dispatcher dispatcher;
 
     public Worker(Socket clientSocket, String publicPath) {
         this.clientSocket = clientSocket;
         this.publicPath = publicPath;
+        dispatcher = new Dispatcher();
     }
 
     public void run()  {
         try {
             clientOutputStream = clientSocket.getOutputStream();
             RequestValidator validator = new RequestValidator();
-            String httpRequest = new RequestReader(clientSocket, validator).readRequest();
+            String httpRequest = new RequestReader(clientSocket.getInputStream(), validator).readRequest();
             if (validator.validate(httpRequest) ) {
                 byte[] response = getResponseBytes(httpRequest);
                 serveResponse(response);
@@ -30,7 +32,6 @@ public class Worker implements Runnable {
 
     private byte[] getResponseBytes(String httpRequest) throws Exception {
         Request request = new RequestBuilder(httpRequest, publicPath).build();
-        Dispatcher dispatcher = new Dispatcher();
         Response response = dispatcher.dispatch(request);
         System.out.println("Full response: " + new String(response.fullResponse, "UTF-8"));
         return response.fullResponse;

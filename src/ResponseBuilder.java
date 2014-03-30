@@ -47,10 +47,10 @@ public class ResponseBuilder {
     }
 
     private String buildHeader(Map.Entry entry, int i) {
-        String headerLines = "";
-        headerLines += entry.getKey() + ": " + entry.getValue();
-        headerLines += i < response.headers.size() ? "\n" : "\r\n\n";
-        return headerLines;
+        String headerLine = "";
+        headerLine += entry.getKey() + ": " + entry.getValue();
+        headerLine += i < response.headers.size() ? "\n" : "\r\n\n";
+        return headerLine;
     }
 
     public void buildOKResponse() {
@@ -60,7 +60,7 @@ public class ResponseBuilder {
     public void buildParameterResponse() throws Exception {
         response.statusCode = "200";
         buildContentTypeHeader();
-        response.body = request.convertParamsToBytes();
+        response.body = request.params.getBytes();
     }
 
     private void buildContentTypeHeader() throws IOException {

@@ -58,11 +58,15 @@ public class RequestBuilder {
         try {
             String rawHeaders = httpRequest.split("\r\n")[1];
             String[] splitHeaders = rawHeaders.split("\n");
-            for (String header : splitHeaders) {
-                String[] splitHeader = header.split(":");
-                request.headers.put(splitHeader[0].trim(), splitHeader[1].trim());
-            }
+            splitEachHeader(splitHeaders);
         } catch(ArrayIndexOutOfBoundsException ex) {}
+    }
+
+    private void splitEachHeader(String[] splitHeaders) {
+        for (String header : splitHeaders) {
+            String[] splitHeader = header.split(":");
+            request.headers.put(splitHeader[0].trim(), splitHeader[1].trim());
+        }
     }
 
     private void decodeParams() {

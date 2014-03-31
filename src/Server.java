@@ -27,9 +27,8 @@ public class Server extends Thread {
 
     private void listen() throws IOException {
         Socket clientSocket = serverSocket.accept();
-        if (clientSocket != null) {
+        if (clientSocket != null)
             executor.execute(new Worker(clientSocket, publicPath));
-        }
     }
 
 }

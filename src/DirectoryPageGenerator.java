@@ -11,20 +11,18 @@ public class DirectoryPageGenerator implements PageGenerator {
     public byte[] generate() throws Exception {
         File[] fileList = fileReader.getDirectoryLinks();
         for (File file : fileList) {
-            if (file.isFile() && file.getName().charAt(0) != '.') {
-                builder = buildDirectoryLink(file);
-            }
+            if (file.isFile() && file.getName().charAt(0) != '.')
+                buildDirectoryLink(file);
         }
         return builder.toString().getBytes();
     }
 
-    public StringBuilder buildDirectoryLink(File file) {
+    private void buildDirectoryLink(File file) {
         String filename = file.getName();
         builder.append("<a href=\"/");
         builder.append(filename);
         builder.append("\">");
         builder.append(filename);
         builder.append("</a><br>\n");
-        return builder;
     }
 }

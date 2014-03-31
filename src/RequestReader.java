@@ -19,9 +19,8 @@ public class RequestReader {
     public String read() throws IOException {
         in = new BufferedReader(new InputStreamReader(clientInputStream));
         String httpRequestLine = in.readLine();
-        if(validator.validate(httpRequestLine)) {
+        if(validator.validate(httpRequestLine))
             readValidRequest(httpRequestLine);
-        }
         return httpRequest;
     }
 
@@ -40,10 +39,9 @@ public class RequestReader {
     }
 
     private void getContentLength(String httpRequestLine) {
-        if(httpRequestLine.contains("Content-Length")) {
+        if(httpRequestLine.contains("Content-Length"))
             bodyContentLength = Integer.parseInt(httpRequestLine.split(": ")[1]);
             requestBodyBuffer = new char[bodyContentLength];
-        }
     }
 
     private boolean requestHeaderComplete(String httpRequestLine) throws IOException {

@@ -69,9 +69,8 @@ public class RequestBuilder {
         ParameterDecoder decoder = new ParameterDecoder(httpParams);
         request.paramsHash = decoder.decode();
         StringBuilder builder = new StringBuilder();
-        for(Map.Entry entry : request.paramsHash.entrySet()) {
+        for(Map.Entry entry : request.paramsHash.entrySet())
             builder = buildParams(builder, entry);
-        }
         request.params = builder.toString();
     }
 

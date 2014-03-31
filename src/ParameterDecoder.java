@@ -17,9 +17,8 @@ public class ParameterDecoder {
 
     private void splitParamsIntoKeyAndValue() {
         String[] splitParams =  params.split("&");
-        for (String param : splitParams) {
+        for (String param : splitParams)
             splitParam(param);
-        }
     }
 
     private void splitParam(String param) {
@@ -39,10 +38,9 @@ public class ParameterDecoder {
     private void iterateOverEachCharacter(String value, Map.Entry<String, String> entry) {
         for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
-            if(c == '%') {
+            if(c == '%')
                 decodeSubString(i, entry, value);
                 value = entry.getValue();
-            }
         }
     }
 

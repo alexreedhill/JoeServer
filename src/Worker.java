@@ -19,7 +19,7 @@ public class Worker implements Runnable {
         try {
             clientOutputStream = clientSocket.getOutputStream();
             RequestValidator validator = new RequestValidator();
-            String httpRequest = new RequestReader(clientSocket.getInputStream(), validator).readRequest();
+            String httpRequest = new RequestReader(clientSocket.getInputStream(), validator).read();
             if (validator.validate(httpRequest) ) {
                 byte[] response = getResponseBytes(httpRequest);
                 serveResponse(response);

@@ -5,18 +5,18 @@ public class RequestBuilder {
     private String httpParams;
     private Request request;
 
-    public RequestBuilder(String rawRequest) {
+    public RequestBuilder(String httpRequest) {
         this.request = new Request();
-        this.httpRequest = rawRequest;
+        this.httpRequest = httpRequest;
         request.publicPath = "../cob_spec/public";
-        System.out.println("Request instantiated: " + rawRequest);
+        System.out.println("Request instantiated: " + httpRequest);
     }
 
-    public RequestBuilder(String rawRequest, String publicPath) {
+    public RequestBuilder(String httpRequest, String publicPath) {
         this.request = new Request();
-        this.httpRequest = rawRequest;
+        this.httpRequest = httpRequest;
         request.publicPath = publicPath;
-        System.out.println("Request instantiated: " + rawRequest);
+        System.out.println("Request instantiated: " + httpRequest);
     }
 
     public Request build() throws ArrayIndexOutOfBoundsException {

@@ -16,7 +16,7 @@ public class RequestReader {
         this.validator = validator;
     }
 
-    public String readRequest() throws IOException {
+    public String read() throws IOException {
         in = new BufferedReader(new InputStreamReader(clientInputStream));
         String httpRequestLine = in.readLine();
         if(validator.validate(httpRequestLine)) {

@@ -23,7 +23,8 @@ public class GetHandlerTest {
         request = builder.build();
         handler = new GetHandler(request);
         Response response = handler.handle();
-        assertEquals("HTTP/1.1 206 Partial Content\r\nContent-Length: 4\nContent-Type: text/plain\nContent-Range: bytes 0-4/77\r\n\nThis", response.convertToString());
+        assertEquals("HTTP/1.1 206 Partial Content\r\nContent-Length: 4\n" +
+                     "Content-Type: text/plain\nContent-Range: bytes 0-4/77\r\n\nThis", response.convertToString());
     }
 
 

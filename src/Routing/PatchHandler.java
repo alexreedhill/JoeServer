@@ -4,7 +4,9 @@ import Request.Request;
 import Response.Response;
 import Response.ResponseBuilder;
 import Util.FileReader;
+import Util.FileWriter;
 import Util.iFileReader;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class PatchHandler implements RequestHandler {
@@ -29,7 +31,9 @@ public class PatchHandler implements RequestHandler {
         String fileContentsHex = DigestUtils.sha1Hex(fileContents);
         try {
             if(request.headers.get("If-Match").equals(fileContentsHex)) {
-                builder.buildPatchResponse();
+                FileWriter writer = new FileWriter(request);
+                byte[] newFileContents = writer.writePartialContent(fileContents);
+                builder.buildPatchResponse(newFileContents);
             } else {
                 builder.buildPreconditionFailedResponse();
             }

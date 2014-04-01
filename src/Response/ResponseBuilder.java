@@ -134,23 +134,21 @@ public class ResponseBuilder {
         response.body = generator.generate();
     }
 
-    public Response buildAuthenticatedResponse() throws IOException {
+    public void buildAuthenticatedResponse() throws IOException {
         response.statusCode = "200";
         buildContentTypeHeader();
         response.body = "GET /log HTTP/1.1\nPUT /these HTTP/1.1\nHEAD /requests HTTP/1.1".getBytes();
-        return response;
     }
 
-    public Response buildAuthenticationRequiredResponse() {
+    public void buildAuthenticationRequiredResponse() {
         response.statusCode = "401";
         response.setHeader("WWW-Authenticate", "Basic realm=\"JoeServer\"");
         response.body = "Authentication required".getBytes();
-        return response;
     }
 
-    public void buildPatchResponse() {
+    public void buildPatchResponse(byte[] newFileContents) {
         buildNoContentResponse();
-        String eTag = DigestUtils.sha1Hex(request.body);
+        String eTag = DigestUtils.sha1Hex(newFileContents);
         System.out.println("Request body: " + request.body);
         System.out.println("ETag: " + eTag);
         response.headers.put("ETag", eTag);

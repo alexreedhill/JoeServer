@@ -21,7 +21,7 @@ public class PostHandler implements RequestHandler {
     public Response handle() throws Exception {
         if(request.path.equals("/form")) {
             builder.buildOKResponse();
-            fileWriter.write();
+            fileWriter.writeFullContent();
         } else if(methodNotAllowed()) {
             builder.buildMethodNotAllowedResponse();
         } else {

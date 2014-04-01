@@ -35,7 +35,7 @@ public class FileWriter implements Util.iFileWriter {
         } else {
             overwriteFileContentsFromBeginningOfFile(fileContents, requestContentLength);
         }
-`    }
+    }
 
     private void overwriteFileContentsFromBeginningOfFile( byte[] fileContents, int requestContentLength) {
         newFileContents = new byte[fileContents.length];

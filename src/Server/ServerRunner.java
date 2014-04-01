@@ -1,3 +1,5 @@
+package Server;
+
 import java.io.IOException;
 
 public class ServerRunner {
@@ -6,7 +8,7 @@ public class ServerRunner {
         try {
             startServer(args);
             sleep();
-            System.out.println("Stopping Server");
+            System.out.println("Stopping Server.Server");
         } catch(Exception ex) {
             System.err.println(ex);
         }

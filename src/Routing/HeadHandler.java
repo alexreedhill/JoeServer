@@ -1,3 +1,9 @@
+package Routing;
+
+import Response.ResponseBuilder;
+import Response.Response;
+import Request.Request;
+
 public class HeadHandler implements RequestHandler {
     private ResponseBuilder builder;
 

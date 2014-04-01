@@ -1,3 +1,5 @@
+package Request;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,8 +7,8 @@ import java.io.InputStreamReader;
 
 public class RequestReader {
     private String httpRequest = "";
-    private int bodyContentLength = 0;
-    private char[] requestBodyBuffer = new char[0];
+    private int bodyContentLength;
+    private char[] requestBodyBuffer;
     private BufferedReader in;
     private InputStream clientInputStream;
     private RequestValidator validator;
@@ -27,7 +29,8 @@ public class RequestReader {
     private void readValidRequest(String httpRequestLine) throws IOException {
         httpRequest = httpRequestLine + "\r\n";
         readUntilEndOfHeaders(httpRequestLine);
-        readBody();
+        if(bodyContentLength > 0)
+            readBody();
     }
 
     private void readUntilEndOfHeaders(String httpRequestLine) throws IOException {

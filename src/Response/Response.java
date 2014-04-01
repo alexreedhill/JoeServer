@@ -1,3 +1,7 @@
+package Response;
+
+import Request.Request;
+
 import java.util.HashMap;
 import java.util.Map;
 

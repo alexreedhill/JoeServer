@@ -1,3 +1,8 @@
+package Routing;
+
+import Response.ResponseBuilder;
+import Response.Response;
+import Request.Request;
 
 public class RedirectHandler implements RequestHandler {
     private ResponseBuilder builder;

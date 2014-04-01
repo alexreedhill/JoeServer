@@ -1,8 +1,6 @@
-import org.junit.Before;
+import Request.Request;
+import Request.RequestBuilder;
 import org.junit.Test;
-import sun.reflect.annotation.ExceptionProxy;
-
-import java.util.LinkedHashMap;
 
 import static junit.framework.Assert.assertEquals;
 

@@ -1,3 +1,10 @@
+package Response;
+
+import Request.Request;
+import Util.DirectoryPageGenerator;
+import Util.FileReader;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,13 +14,13 @@ public class ResponseBuilder {
     private Response response;
     private Request request;
     private FileReader fileReader;
-    private PageGenerator generator;
+    private static final Map<String, String> STATUS_MESSAGES = createStatusMessages();
+
 
     public ResponseBuilder(Request request) throws Exception {
         response = new Response(request);
         this.request = response.request;
         this.fileReader = new FileReader(request);
-        generator = new DirectoryPageGenerator(fileReader);
     }
 
     public Response buildFullResponse() throws Exception {
@@ -32,7 +39,6 @@ public class ResponseBuilder {
     }
 
     private String getStatusMessage() {
-        Map<String, String> STATUS_MESSAGES = createStatusMessages();
         return STATUS_MESSAGES.get(response.statusCode);
     }
 
@@ -124,6 +130,7 @@ public class ResponseBuilder {
     public void buildDirectoryResponse() throws Exception {
         response.statusCode = "200";
         response.headers.put("Content-Type", "text/html");
+        DirectoryPageGenerator generator = new DirectoryPageGenerator(fileReader);
         response.body = generator.generate();
     }
 
@@ -141,14 +148,32 @@ public class ResponseBuilder {
         return response;
     }
 
+    public void buildPatchResponse() {
+        buildNoContentResponse();
+        String eTag = DigestUtils.sha1Hex(request.body);
+        System.out.println("Request body: " + request.body);
+        System.out.println("ETag: " + eTag);
+        response.headers.put("ETag", eTag);
+    }
+
+    public void buildPreconditionFailedResponse() {
+        response.statusCode = "412";
+    }
+
+    public void buildNoContentResponse() {
+        response.statusCode = "204";
+    }
+
     private static Map<String, String> createStatusMessages() {
         Map<String, String> messages = new HashMap<String, String>();
         messages.put("200", "OK");
+        messages.put("204", "No Content");
         messages.put("206", "Partial Content");
         messages.put("404", "Not Found");
         messages.put("307", "Moved Temporarily");
         messages.put("401", "Unauthorized");
         messages.put("405", "Method Not Allowed");
+        messages.put("412", "Precondition Failed");
         return Collections.unmodifiableMap(messages);
     }
 }

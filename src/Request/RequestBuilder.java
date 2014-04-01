@@ -1,3 +1,6 @@
+package Request;
+
+import Util.ParameterDecoder;
 import java.util.Map;
 
 public class RequestBuilder {
@@ -9,30 +12,30 @@ public class RequestBuilder {
         this.request = new Request();
         this.httpRequest = httpRequest;
         request.publicPath = "../cob_spec/public";
-        System.out.println("Request instantiated: " + httpRequest);
+        System.out.println("Server.Request instantiated: " + httpRequest);
     }
 
     public RequestBuilder(String httpRequest, String publicPath) {
         this.request = new Request();
         this.httpRequest = httpRequest;
         request.publicPath = publicPath;
-        System.out.println("Request instantiated: " + httpRequest);
+        System.out.println("Server.Request instantiated: " + httpRequest);
     }
 
     public Request build() throws ArrayIndexOutOfBoundsException {
-        String[] splitRawRequest = httpRequest.split("\r\n");
-        parseFirstLine(splitRawRequest);
+        String[] splitHttpRequest = httpRequest.split("\r\n");
+        parseFirstLine(splitHttpRequest);
         decodeParams();
         parseHeaders();
         try {
-            String[] headersAndBody = splitRawRequest[1].split("\n");
+            String[] headersAndBody = splitHttpRequest[splitHttpRequest.length - 1].split("\n");
             request.body = headersAndBody[headersAndBody.length -1];
-        } catch(ArrayIndexOutOfBoundsException ex) {}
+        } catch(ArrayIndexOutOfBoundsException ignored) {}
         return request;
     }
 
-    private void parseFirstLine(String[] splitRawRequest) {
-        String statusLine = splitRawRequest[0];
+    private void parseFirstLine(String[] splitHttpRequest) {
+        String statusLine = splitHttpRequest[0];
         String[] splitStatusLine = statusLine.split(" ");
         parsePath(splitStatusLine[1]);
         request.httpVersion = splitStatusLine[2];
@@ -59,7 +62,7 @@ public class RequestBuilder {
             String rawHeaders = httpRequest.split("\r\n")[1];
             String[] splitHeaders = rawHeaders.split("\n");
             splitEachHeader(splitHeaders);
-        } catch(ArrayIndexOutOfBoundsException ex) {}
+        } catch(ArrayIndexOutOfBoundsException ignored) {}
     }
 
     private void splitEachHeader(String[] splitHeaders) {

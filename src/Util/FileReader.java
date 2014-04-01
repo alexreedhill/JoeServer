@@ -1,11 +1,15 @@
-import java.io.IOException;
+package Util;
+
+import Request.Request;
+
+import org.apache.commons.io.FileUtils;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
 
-public class FileReader {
+public class FileReader implements iFileReader {
     private Request request;
     private String publicPath;
 

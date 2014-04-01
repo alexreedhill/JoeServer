@@ -1,8 +1,6 @@
+import Util.FileReader;
 import org.junit.Test;
-
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import static junit.framework.Assert.assertEquals;
 

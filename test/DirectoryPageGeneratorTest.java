@@ -1,3 +1,6 @@
+import Util.DirectoryPageGenerator;
+import Util.FileReader;
+import Request.Request;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,11 +22,12 @@ public class DirectoryPageGeneratorTest {
         byte[] directoryPage = generator.generate();
         assertEquals("<a href=\"/file1\">file1</a><br>\n" +
                 "<a href=\"/file2\">file2</a><br>\n" +
-                "<a href=\"/form\">form</a><br>\n" +
+//                "<a href=\"/form\">form</a><br>\n" +
                 "<a href=\"/image.gif\">image.gif</a><br>\n" +
                 "<a href=\"/image.jpeg\">image.jpeg</a><br>\n" +
                 "<a href=\"/image.png\">image.png</a><br>\n" +
                 "<a href=\"/partial_content.txt\">partial_content.txt</a><br>\n" +
+                "<a href=\"/patch-content.txt\">patch-content.txt</a><br>\n" +
                 "<a href=\"/text-file.txt\">text-file.txt</a><br>\n", new String(directoryPage, "UTF-8"));
     }
 }

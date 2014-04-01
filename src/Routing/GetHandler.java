@@ -1,3 +1,10 @@
+package Routing;
+
+import Request.Request;
+import Response.Response;
+import Response.ResponseBuilder;
+import Util.BasicAuthenticator;
+
 public class GetHandler implements RequestHandler {
     private Request request;
     private ResponseBuilder builder;

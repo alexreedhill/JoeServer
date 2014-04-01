@@ -1,7 +1,11 @@
-import org.junit.Before;
-import org.junit.Test;
-import static junit.framework.Assert.assertEquals;
+import Request.Request;
+import Request.RequestBuilder;
+import Response.Response;
+import Routing.GetHandler;
 import org.apache.commons.codec.binary.Base64;
+import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
 
 public class BasicAuthenticatorTest {
     private Response response;

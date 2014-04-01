@@ -1,5 +1,10 @@
-import java.io.UnsupportedEncodingException;
+package Util;
+
+import Response.ResponseBuilder;
+import Request.Request;
+
 import org.apache.commons.codec.binary.Base64;
+import java.io.UnsupportedEncodingException;
 
 public class BasicAuthenticator {
     private Request request;

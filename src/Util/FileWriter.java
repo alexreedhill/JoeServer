@@ -35,8 +35,7 @@ public class FileWriter implements Util.iFileWriter {
         } else {
             overwriteFileContentsFromBeginningOfFile(fileContents, requestContentLength);
         }
-        System.out.println("New file contents: " + new String(fileContents, "UTF-8"));
-    }
+`    }
 
     private void overwriteFileContentsFromBeginningOfFile( byte[] fileContents, int requestContentLength) {
         newFileContents = new byte[fileContents.length];

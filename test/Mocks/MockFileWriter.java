@@ -34,12 +34,10 @@ public class MockFileWriter implements iFileWriter {
 
     private void checkContentLengths(int requestContentLength, byte[] fileContents) throws UnsupportedEncodingException {
         if(requestContentLength > fileContents.length) {
-            System.out.println("Request body: " + request.body);
             newFileContents = request.body.getBytes();
         } else {
             overwriteFileContentsFromBeginningOfFile(fileContents, requestContentLength);
         }
-        System.out.println("New file contents: " + new String(fileContents, "UTF-8"));
     }
 
     private void overwriteFileContentsFromBeginningOfFile( byte[] fileContents, int requestContentLength) {

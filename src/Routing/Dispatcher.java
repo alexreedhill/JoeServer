@@ -12,7 +12,7 @@ public class Dispatcher {
         try {
             handleRequestBasedOnMethod(request);
         } catch(Exception ex) {
-            System.out.println(ex);
+            System.err.println(ex);
         }
         return response;
     }

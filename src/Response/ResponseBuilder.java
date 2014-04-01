@@ -149,8 +149,6 @@ public class ResponseBuilder {
     public void buildPatchResponse(byte[] newFileContents) {
         buildNoContentResponse();
         String eTag = DigestUtils.sha1Hex(newFileContents);
-        System.out.println("Request body: " + request.body);
-        System.out.println("ETag: " + eTag);
         response.headers.put("ETag", eTag);
     }
 

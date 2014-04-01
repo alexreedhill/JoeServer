@@ -41,7 +41,7 @@ public class PatchHandlerTest {
     }
 
     @Test
-    public void setsEtagOnResponseIfRequestIfMatchMatchesResourceLongerNewBody() throws Exception {
+    public void setsETagOnResponseIfRequestIfMatchMatchesResourceLongerNewBody() throws Exception {
         builder = new RequestBuilder("PATCH /patch-content.txt HTTP/1.1\r\n" +
                 "If-Match: 40bd001563085fc35165329ea1ff5c5ecbdbbeef\n" +
                 "Content-Length: 7\r\n\n" +

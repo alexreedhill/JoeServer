@@ -1,15 +1,19 @@
-package Util;
+package Mocks;
 
 import Request.Request;
+import Util.iFileWriter;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
-public class FileWriter implements Util.iFileWriter {
+public class MockFileWriter implements iFileWriter {
     private Request request;
     private File file;
     private byte[] newFileContents;
 
-    public FileWriter(Request request) {
+    public MockFileWriter(Request request) {
         this.request = request;
     }
 
@@ -25,12 +29,12 @@ public class FileWriter implements Util.iFileWriter {
     public byte[] writePartialContent(byte[] fileContents) throws Exception {
         int requestContentLength = Integer.parseInt(request.headers.get("Content-Length"));
         checkContentLengths(requestContentLength, fileContents);
-        writeWithFileOutputStream();
         return newFileContents;
     }
 
     private void checkContentLengths(int requestContentLength, byte[] fileContents) throws UnsupportedEncodingException {
         if(requestContentLength > fileContents.length) {
+            System.out.println("Request body: " + request.body);
             newFileContents = request.body.getBytes();
         } else {
             overwriteFileContentsFromBeginningOfFile(fileContents, requestContentLength);
@@ -44,12 +48,5 @@ public class FileWriter implements Util.iFileWriter {
         System.arraycopy(requestBodyBytes, 0, newFileContents, 0, requestContentLength);
         System.arraycopy(fileContents, requestContentLength, newFileContents,
                 requestContentLength, (fileContents.length - requestContentLength));
-    }
-
-    private void writeWithFileOutputStream() throws Exception {
-        file = new File(request.publicPath + request.path);
-        FileOutputStream writer = new FileOutputStream(file);
-        writer.write(newFileContents);
-        writer.close();
     }
 }

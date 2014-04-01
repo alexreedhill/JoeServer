@@ -3,6 +3,8 @@ package Server;
 import java.io.IOException;
 
 public class ServerRunner {
+    private static int port;
+    private static String publicPath;
 
     public static void main(String[] args)  {
         try {
@@ -15,8 +17,13 @@ public class ServerRunner {
     }
 
     private static void startServer(String[] args) throws IOException {
-        int port = Integer.parseInt(args[0]);
-        String publicPath = args[1];
+        try {
+            port = Integer.parseInt(args[0]);
+            publicPath = args[1];
+        } catch(ArrayIndexOutOfBoundsException ex) {
+            port = 5000;
+            publicPath = "../cob_spec/public";
+        }
         Server server = new Server(port, publicPath);
         new Thread(server).start();
     }

@@ -6,24 +6,27 @@ import Response.ResponseBuilder;
 import Util.FileReader;
 import Util.FileWriter;
 import Util.iFileReader;
-
+import Util.iFileWriter;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class PatchHandler implements RequestHandler {
     private Request request;
     private ResponseBuilder builder;
     private iFileReader fileReader;
+    private iFileWriter fileWriter;
 
     public PatchHandler(Request request) throws Exception {
         this.request = request;
         this.builder = new ResponseBuilder(request);
         this.fileReader = new FileReader(request);
+        this.fileWriter = new FileWriter(request);
     }
 
-    public PatchHandler(Request request, iFileReader fileReader) throws Exception {
+    public PatchHandler(Request request, iFileReader fileReader, iFileWriter fileWriter) throws Exception {
         this.request = request;
         this.builder = new ResponseBuilder(request);
         this.fileReader = fileReader;
+        this.fileWriter = fileWriter;
     }
 
     public Response handle() throws Exception {
@@ -31,9 +34,7 @@ public class PatchHandler implements RequestHandler {
         String fileContentsHex = DigestUtils.sha1Hex(fileContents);
         try {
             if(request.headers.get("If-Match").equals(fileContentsHex)) {
-                FileWriter writer = new FileWriter(request);
-                byte[] newFileContents = writer.writePartialContent(fileContents);
-                builder.buildPatchResponse(newFileContents);
+                handleMatchedRequest(fileContents);
             } else {
                 builder.buildPreconditionFailedResponse();
             }
@@ -41,5 +42,10 @@ public class PatchHandler implements RequestHandler {
             builder.buildPreconditionFailedResponse();
         }
         return builder.buildFullResponse();
+    }
+
+    private void handleMatchedRequest(byte[] fileContents) throws Exception {
+        byte[] newFileContents = fileWriter.writePartialContent(fileContents);
+        builder.buildPatchResponse(newFileContents);
     }
 }

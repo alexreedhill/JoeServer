@@ -22,7 +22,7 @@ public class DirectoryPageGeneratorTest {
         byte[] directoryPage = generator.generate();
         assertEquals("<a href=\"/file1\">file1</a><br>\n" +
                 "<a href=\"/file2\">file2</a><br>\n" +
-//                "<a href=\"/form\">form</a><br>\n" +
+                "<a href=\"/form\">form</a><br>\n" +
                 "<a href=\"/image.gif\">image.gif</a><br>\n" +
                 "<a href=\"/image.jpeg\">image.jpeg</a><br>\n" +
                 "<a href=\"/image.png\">image.png</a><br>\n" +

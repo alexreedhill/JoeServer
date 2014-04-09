@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app='ttt'>
+<head>
+	<meta charset=utf-8 />
+	<title>ttt-rb</title>
+	<link href='/ttt.css' rel='stylesheet'>
+	<script src='/angular.min.js'></script>
+	<script src='/ttt.js'></script>
+</head>
+<body ng-controller='TTTCtrl'>
+	<div id="scoreboard">
+		<h2>Wins: 0</h2>
+		<h2>Losses: {{ losses }}</h2>
+		<h2>Ties: {{ ties }}</h2>
+		<div class="pick-character" ng-hide="filledCells">
+			<label>Choose Your Character</label><br/>
+			<input type='radio' value="X" ng-model='humanValue'>X</input>
+			<input type='radio' value="O" ng-model='humanValue'>O</input><br /><br />
+		</div>
+    <div class="pick-character" ng-show="filledCells">
+			Your character: {{ humanValue }}
+		</div>
+    <div class="pick-board-height" ng-hide="filledCells">
+      <label>Choose Board Size</label><br />
+      <input type="radio" value="3" ng-model="height">3x3</input>
+      <input type="radio" value="4" ng-model="height">4x4</input>
+      <p><a ng-click="generateBoard()" href="#">Generate Board</a><br /><br />
+    </div>
+    <div class="pick-ai">
+      <label>Choose your AI</label><br />
+      <input type='radio' value='minimax' ng-model='ai'>Minimax</input><br />
+      <input type='radio' value='non-minimax' ng-model='ai'>Non-Minimax</input><br /><br />
+    </div>
+    <div class='pick-first-player' ng-hide="ai === 'non-minimax'">
+      <label>Choose First Player</label><br />
+      <input type='radio' value='human' ng-model='firstPlayerName'>Human</input><br />
+      <input type='radio' value='ai' ng-model='firstPlayerName'>Computer</input><br />
+      <p ng-hide="firstPlayerName === 'human'"><a ng-click="getGameJSON()" href="#">Start Game</a></p>
+    </div>
+    <p><a ng-click="newGame()" href="#">New Game</a></p>
+	</div>
+	<div id="board-container">
+		<h1>Tic Tac Toe</h1>
+  		<table>
+  			<tr ng-repeat='row in rows'>
+          <td ng-repeat='cell in row.cells track by $index' id="cell-{{ cell.id }}" class="height-{{ row.height }}" ng-class="{ 'win' : cell.win }" ng-click='addValue(cell.id)'>{{ cell.value }}</td> 
+  			</tr>
+  		</table>
+  	</div>
+</body>
+</html>

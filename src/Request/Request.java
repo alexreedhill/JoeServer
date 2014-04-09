@@ -11,4 +11,5 @@ public class Request {
     public String body;
     public LinkedHashMap<String, String> paramsHash;
     public LinkedHashMap<String, String> headers = new LinkedHashMap<String, String>();
+    public String json;
 }

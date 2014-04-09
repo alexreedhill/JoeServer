@@ -77,6 +77,8 @@ public class ParameterDecoder {
         conversions.put("%3F", '?');
         conversions.put("%2E", '.');
         conversions.put("%2C", ',');
+        conversions.put("%7B", '{');
+        conversions.put("%7D", '}');
         return conversions;
     }
 }

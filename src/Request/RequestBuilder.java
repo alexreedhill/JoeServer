@@ -1,6 +1,7 @@
 package Request;
 
 import Util.ParameterDecoder;
+
 import java.util.Map;
 
 public class RequestBuilder {
@@ -24,18 +25,14 @@ public class RequestBuilder {
 
     public Request build() throws ArrayIndexOutOfBoundsException {
         String[] splitHttpRequest = httpRequest.split("\r\n");
-        parseFirstLine(splitHttpRequest);
+        parseFirstLine(splitHttpRequest[0]);
         decodeParams();
         parseHeaders();
-        try {
-            String[] headersAndBody = splitHttpRequest[splitHttpRequest.length - 1].split("\n");
-            request.body = headersAndBody[headersAndBody.length -1];
-        } catch(ArrayIndexOutOfBoundsException ignored) {}
+        buildHeadersAndBody(splitHttpRequest);
         return request;
     }
 
-    private void parseFirstLine(String[] splitHttpRequest) {
-        String statusLine = splitHttpRequest[0];
+    private void parseFirstLine(String statusLine) {
         String[] splitStatusLine = statusLine.split(" ");
         parsePath(splitStatusLine[1]);
         request.httpVersion = splitStatusLine[2];
@@ -72,6 +69,13 @@ public class RequestBuilder {
         }
     }
 
+    private void buildHeadersAndBody(String[] splitHttpRequest) {
+        try {
+            String[] headersAndBody = splitHttpRequest[splitHttpRequest.length - 1].split("\n");
+            request.body = headersAndBody[headersAndBody.length -1];
+        } catch(ArrayIndexOutOfBoundsException ignored) {}
+    }
+
     private void decodeParams() {
         ParameterDecoder decoder = new ParameterDecoder(httpParams);
         request.paramsHash = decoder.decode();
@@ -88,4 +92,5 @@ public class RequestBuilder {
         builder.append("\n");
         return builder;
     }
+
 }

@@ -45,6 +45,6 @@ public class MockFileWriter implements iFileWriter {
         byte[] requestBodyBytes = request.body.getBytes();
         System.arraycopy(requestBodyBytes, 0, newFileContents, 0, requestContentLength);
         System.arraycopy(fileContents, requestContentLength, newFileContents,
-                requestContentLength, (fileContents.length - requestContentLength));
+                         requestContentLength, (fileContents.length - requestContentLength));
     }
 }

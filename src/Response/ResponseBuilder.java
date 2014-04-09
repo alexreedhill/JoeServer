@@ -160,6 +160,12 @@ public class ResponseBuilder {
         response.statusCode = "204";
     }
 
+    public void buildAppResponse(String json) {
+        response.statusCode = "200";
+        response.body = json.getBytes();
+        response.headers.put("Content-Type", "text/json");
+    }
+
     private static Map<String, String> createStatusMessages() {
         Map<String, String> messages = new HashMap<String, String>();
         messages.put("200", "OK");
